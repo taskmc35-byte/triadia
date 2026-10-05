@@ -569,6 +569,50 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z
 .cardview p b{display:block;font-family:var(--f-display);font-weight:400;font-size:24px;color:var(--text)}
 
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition:none!important}}
+
+/* ---- fit-to-screen pass: no vertical scrolling outside collection, shop and story map; bottom controls clear of the screen edge ---- */
+:root{--sab:env(safe-area-inset-bottom,0px);--sat:env(safe-area-inset-top,0px);--edge:max(18px,calc(env(safe-area-inset-bottom,0px) + 12px))}
+.game{--sab:env(safe-area-inset-bottom,0px)}
+.zone.b{padding-bottom:var(--edge)}
+.dbox{bottom:var(--edge)}
+.toast{bottom:calc(var(--edge) + 8px)}
+#scrHome{overflow:hidden}
+#scrHome .homein{height:100%;box-sizing:border-box;margin:0;justify-content:space-between;gap:clamp(6px,1.6vh,16px);padding:max(14px,var(--sat)) 0 var(--edge)}
+#scrHome .alogo{width:min(330px,84vw,38vh)}
+#scrHome .show{flex:1 1 0;min-height:70px;height:auto;max-height:240px}
+#scrHome .menu{gap:clamp(8px,1.4vh,12px)}
+@media (max-height:760px){
+  .mbtn{padding:10px 20px 12px}
+  .mbtn b{font-size:22px}
+  .mbtn .ic{width:34px;height:34px}
+  .tile{padding:10px 6px}
+  #scrHome .tag{font-size:14px}
+}
+.sheet .panel{max-height:calc(100% - 10px - var(--sat));padding-bottom:var(--edge);gap:clamp(8px,1.6vh,14px)}
+.arenas{display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;padding:3px 3px 4px;margin:0 -3px;scrollbar-width:none}
+.arenas::-webkit-scrollbar{display:none}
+.arenas label{flex:0 0 66px;scroll-snap-align:start}
+@media (max-height:760px){
+  .tg{padding:7px 9px}.tg small{font-size:10.5px;line-height:1.25}
+  .sheet .panel .note{display:none}
+  .seg span{padding:6px 4px}
+  .fld{margin-top:6px}.fld input{padding:8px 12px}
+  .help li{font-size:13px;line-height:1.4}
+  .help ul{gap:4px}
+}
+
+.sheet .panel>*,.sheet form>*{min-width:0}
+.sheet .panel{overflow-x:hidden;box-sizing:border-box;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.over .box,.reward,.lobbyp{box-sizing:border-box}
+.cyc{display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-top:6px}
+.cyc i{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#fff 0,var(--ec) 50%);border:2px solid var(--ink)}
+.cyc i svg{width:62%}
+.cyc b{color:var(--muted)!important;font-size:15px}
+.cyc .sep{width:10px}
+.coach .cyc{margin-top:4px}
+.hpage{display:grid;gap:10px}
+.hnote{margin:0;font-size:12.5px;color:var(--muted);line-height:1.4}
+@media (max-height:700px){.tg small{display:none}.tg{padding:8px 10px}}
 </style>
 </head>
 <body>
@@ -696,9 +740,10 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z
     <div class="cfgRules">
       <h4>Regole</h4>
       <div class="toggles">
-        <label class="tg"><input type="checkbox" id="rSame" checked><span><b>Identico</b><small>2+ lati uguali ai vicini: li conquisti</small></span></label>
-        <label class="tg"><input type="checkbox" id="rPlus" checked><span><b>Somma</b><small>2+ somme uguali con i vicini</small></span></label>
-        <label class="tg"><input type="checkbox" id="rElem"><span><b>Elementale</b><small>Simboli sulle caselle: ±1 ai valori</small></span></label>
+        <label class="tg"><input type="checkbox" id="rSame" checked><span><b>Specchio</b><small>2+ lati uguali ai vicini: li conquisti</small></span></label>
+        <label class="tg"><input type="checkbox" id="rPlus" checked><span><b>Armonia</b><small>2+ somme uguali con i vicini</small></span></label>
+        <label class="tg"><input type="checkbox" id="rCycle" checked><span><b>Ciclo degli elementi</b><small>Elemento forte: +1 quando attacca</small></span></label>
+        <label class="tg"><input type="checkbox" id="rElem"><span><b>Affinità</b><small>Simboli sulle caselle: ±1 ai valori</small></span></label>
         <label class="tg"><input type="checkbox" id="rOpen" checked><span><b>Mano scoperta</b><small>Vedi le carte avversarie</small></span></label>
       </div>
     </div>
@@ -732,19 +777,27 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z
 <div class="sheet" id="help" hidden>
   <div class="panel help">
     <h3>Come si gioca</h3>
+    <div class="seg"><label><input type="radio" name="hp" id="hp1" checked><span>Le basi</span></label><label><input type="radio" name="hp" id="hp2"><span>Regole speciali</span></label></div>
+    <div class="hpage" id="hpBase">
     <ul>
       <li>Tu e l'avversario avete <b>5 carte</b>. A turno ne piazzate una su una casella libera della griglia 3×3.</li>
-      <li>Ogni carta ha 4 valori in basso al centro, disposti a croce: ognuno indica la forza sul lato corrispondente (A = 10). Se il tuo lato supera il lato vicino di una carta avversaria, quella carta diventa tua.</li>
+      <li>Ogni carta ha 4 valori in basso al centro, disposti a croce: ognuno indica la forza sul lato corrispondente (X = 10, come il numero romano). Se il tuo lato supera il lato vicino di una carta avversaria, quella carta diventa tua.</li>
       <li>Il medaglione in alto a destra è l'<b>elemento</b>. Il materiale della cornice è la <b>rarità</b>:</li>
     </ul>
     <div class="legend"><div><i class="l1"></i>Comune</div><div><i class="l2"></i>Non comune</div><div><i class="l3"></i>Rara</div><div><i class="l4"></i>Leggendaria</div></div>
+    <ul><li>A griglia piena vince chi possiede più carte, contando anche quella rimasta in mano.</li></ul>
+    </div>
+    <div class="hpage" id="hpRules" hidden>
     <ul>
-      <li><b>Identico</b>: se due o più lati della carta appena giocata sono uguali ai lati che toccano, conquisti le carte avversarie coinvolte.</li>
-      <li><b>Somma</b>: se due o più vicini danno la stessa somma con i lati che si toccano, conquisti le avversarie.</li>
-      <li><b>Combo</b>: le carte prese con Identico o Somma attaccano a loro volta i propri vicini.</li>
-      <li><b>Elementale</b>: una carta sul simbolo del suo elemento prende +1 su tutti i lati, altrimenti −1.</li>
-      <li>A griglia piena vince chi possiede più carte, contando anche quella rimasta in mano.</li>
+      <li><b>Specchio</b>: se due o più lati della carta appena giocata sono uguali ai lati che toccano, conquisti le carte avversarie coinvolte.</li>
+      <li><b>Armonia</b>: se due o più vicini danno la stessa somma con i lati che si toccano, conquisti le avversarie.</li>
+      <li><b>Reazione a catena</b>: le carte prese con Specchio o Armonia attaccano a loro volta i propri vicini.</li>
+      <li><b>Ciclo degli elementi</b>: quando attacchi una carta dell'elemento che il tuo batte, prendi +1 su quel lato.<span class="cyc" id="cycRow"></span></li>
+      <li><b>Affinità</b>: una carta sul simbolo del suo elemento prende +1 su tutti i lati, altrimenti −1.</li>
+      <li><b>Distorsione</b> (solo nel Piano Distorto): dopo ogni mossa i simboli sulle caselle libere si spostano e a volte cambiano elemento.</li>
     </ul>
+    <p class="hnote">Puoi attivare o disattivare le regole in Battaglia rapida. Nella Storia le introduce Lanternino, capitolo dopo capitolo.</p>
+    </div>
     <button class="btn gold" id="helpClose">Ho capito</button>
   </div>
 </div>
@@ -790,10 +843,13 @@ const CARDS = DEF.map(([el, r, n, idle, s]) => {
   ART[id] = {src:`img/${id}.webp`, idle, dur:DUR[idle]};
   return {id, n, el, r, art:id, s};
 });
-const fmt = v => v >= 10 ? 'A' : String(v);
+const fmt = v => v >= 10 ? 'X' : String(v);
 
 /* ---------- Rules engine ---------- */
 function nbs(i){ const a = []; if (i >= 3) a.push([0, i - 3]); if (i % 3 < 2) a.push([1, i + 1]); if (i < 6) a.push([2, i + 3]); if (i % 3 > 0) a.push([3, i - 1]); return a; }
+/* ciclo degli elementi: Fuoco › Vento › Terra › Acqua › Fuoco, Luce ⇄ Ombra. Chi attacca un elemento debole prende +1 su quel confronto */
+const BEATS = {fire:'wind', wind:'earth', earth:'water', water:'fire', light:'shadow', shadow:'light'};
+const adv = (a, d, rules) => rules.cycle && BEATS[a.el] === d.el ? 1 : 0;
 function mod(card, i, elems){ return elems[i] ? (elems[i] === card.el || card.el === 'prism' ? 1 : -1) : 0; }
 const clampV = v => Math.max(1, Math.min(10, v));
 function val(b, i, side, elems){ const c = b[i].card; return clampV(c.s[side] + mod(c, i, elems)); }
@@ -813,12 +869,14 @@ function resolve(board, idx, rules, elems){
     Object.values(sums).forEach(js => { if (js.length >= 2) js.forEach(j => { if (b[j].owner !== me && !f.includes(j)) f.push(j); }); });
     if (f.length){ flip(f); ev.push({t:'plus', js:f}); special.push(...f); }
   }
-  const basic = N.filter(([d, j]) => b[j].owner !== me && val(b, idx, d, elems) > val(b, j, (d + 2) % 4, elems)).map(x => x[1]);
-  if (basic.length){ flip(basic); ev.push({t:'basic', js:basic}); }
+  const atk = b[idx].card;
+  const basic = N.filter(([d, j]) => b[j].owner !== me && val(b, idx, d, elems) + adv(atk, b[j].card, rules) > val(b, j, (d + 2) % 4, elems)).map(x => x[1]);
+  const byAdv = basic.some(j => { const d = N.find(x => x[1] === j)[0]; return val(b, idx, d, elems) <= val(b, j, (d + 2) % 4, elems); });
+  if (basic.length){ flip(basic); ev.push({t:'basic', js:basic, adv:byAdv}); }
   let wave = special;
   while (wave.length){
     const next = [];
-    wave.forEach(k => nbs(k).forEach(([d, j]) => { if (b[j] && b[j].owner !== me && val(b, k, d, elems) > val(b, j, (d + 2) % 4, elems) && !next.includes(j)) next.push(j); }));
+    wave.forEach(k => nbs(k).forEach(([d, j]) => { if (b[j] && b[j].owner !== me && val(b, k, d, elems) + adv(b[k].card, b[j].card, rules) > val(b, j, (d + 2) % 4, elems) && !next.includes(j)) next.push(j); }));
     if (next.length){ flip(next); ev.push({t:'combo', js:next}); }
     wave = next;
   }
@@ -852,7 +910,7 @@ const PROLOGUE = [
  ['L',"Io e i miei amici più tranquilli formiamo il tuo primo mazzo. Non guardarci così: siamo forti. Abbastanza. In certi giorni."],
  ['L',"Ogni spirito che batterai si unirà a noi. Arriveremo alla Torre, salveremo il sole e magari qualcuno mi ringrazierà, per una volta. Andiamo, Custode!"]
 ];
-const R = (same, plus, elem) => ({same, plus, elem, open:true});
+const R = (same, plus, elem, cycle) => ({same, plus, elem, cycle:!!cycle, open:true});
 const CH = [
  {n:'Il Messaggio Perduto', a:'pianura', rules:R(false,false,false), nodes:[
   {id:'wind-2', hand:['wind-1','earth-1','water-1','fire-1'], diff:'easy',
@@ -870,7 +928,7 @@ const CH = [
  ]},
  {n:'Ladri e Campane', a:'citta', rules:R(true,false,false), nodes:[
   {id:'shadow-2', hand:['shadow-1','fire-1','water-1','light-1'],
-   intro:[['X',"Ops! Questa bella carta era nella tua borsa? Che coincidenza: adesso è nella mia."],['L',"Restituiscila subito, ladruncola!"],['X',"Mmh… facciamo così: una partita. Se vinci, ti ridarò tutto. Se vinco io, mi terrò anche la lanterna parlante."],['L',"EHI! Io non sono in vendita! …Quanto offre, per curiosità?"],['L',"In città vale la regola Identico: se due lati della tua carta sono uguali ai lati che toccano, le prendi entrambe. Rubare legalmente, insomma. La volpe approva."]],
+   intro:[['X',"Ops! Questa bella carta era nella tua borsa? Che coincidenza: adesso è nella mia."],['L',"Restituiscila subito, ladruncola!"],['X',"Mmh… facciamo così: una partita. Se vinci, ti ridarò tutto. Se vinco io, mi terrò anche la lanterna parlante."],['L',"EHI! Io non sono in vendita! …Quanto offre, per curiosità?"],['L',"In città vale la regola Specchio: se due lati della tua carta sono uguali ai lati che toccano, le prendi entrambe. Rubare legalmente, insomma. La volpe approva."]],
    win:[['X',"Tsk. Mani veloci quanto le mie. Tieni, ecco la tua roba."],['X',"E già che ci sono, vengo con te. Dicono che nella Torre ci siano tesori molto interessanti da… ammirare."]],
    lose:"Grazie della partita! La lanterna però te la lascio: parla troppo."},
   {id:'light-2', hand:['light-1','shadow-1','earth-2','wind-1'],
@@ -884,7 +942,7 @@ const CH = [
  ]},
  {n:'Il Canto delle Maree', a:'porto', rules:R(true,true,false), nodes:[
   {id:'water-2', hand:['water-1','wind-2','fire-1','shadow-2'],
-   intro:[['X',"Ahoy! Avete visto un pesce lungo così? No, così! No, aspetta…"],['L',"Ci serve una nave, Mozzo. Possibilmente una che galleggi."],['X',"Una nave? Il capitano dice che il mare è arrabbiato. Ma se mi battete, vi porterò dalla Sacerdotessa: lei parla con le onde!"],['L',"Al porto si aggiunge la regola Somma: se due carte vicine danno la stessa somma con i lati che toccano, le conquisti. Sì, c'è della matematica. Respira."]],
+   intro:[['X',"Ahoy! Avete visto un pesce lungo così? No, così! No, aspetta…"],['L',"Ci serve una nave, Mozzo. Possibilmente una che galleggi."],['X',"Una nave? Il capitano dice che il mare è arrabbiato. Ma se mi battete, vi porterò dalla Sacerdotessa: lei parla con le onde!"],['L',"Al porto si aggiunge la regola Armonia: se due carte vicine danno la stessa somma con i lati che toccano, le conquisti. Sì, c'è della matematica. Respira."]],
    win:[['X',"Affondato! Che figuraccia."],['X',"Va bene, vi accompagno. E mi porto l'amo, non si sa mai."]],
    lose:"Ah-ha! Questa la racconterò in taverna. Un po' ingrandita, ovvio."},
   {id:'water-3', hand:['water-2','water-1','light-2','earth-2'],
@@ -896,7 +954,7 @@ const CH = [
    win:[['X',"…Interessante. Nessuno mi aveva più battuto da quando i continenti erano giovani."],['X',"L'oceano di Eclissi è buio. Preferisco il mio, con le stelle che si specchiano sulle onde. Il mio tridente è tuo."]],
    lose:"Prevedibile. Torna quando non avrai più paura dell'acqua alta."}
  ]},
- {n:'Il Cuore del Vulcano', a:'lava', rules:R(true,true,false), nodes:[
+ {n:'Il Cuore del Vulcano', a:'lava', rules:R(true,true,false,true), nodes:[
   {id:'fire-2', hand:['fire-1','earth-2','shadow-2','light-2'],
    intro:[['X',"Non ho tempo! La Regina vuole mille lame entro stasera e io ne ho fatte tre!"],['L',"Mille lame? E per cosa?"],['X',"Per Eclissi, no? Fuori dai piedi… oppure battimi in fretta, che il ferro si raffredda!"]],
    win:[['X',"Bah! Battuto in meno di un raffreddamento."],['X',"Sai che c'è? Mille lame sono troppe. Mi licenzio e vengo con voi!"]],
@@ -910,9 +968,9 @@ const CH = [
    win:[['X',"Ah! Lo sento… sento di nuovo il calore!"],['X',"Mi hai riacceso, Custode. Una regina paga sempre i suoi debiti: le mie ali sono tue. Andiamo a riprenderci il sole."]],
    lose:"Cenere! Ma dalla cenere si rinasce. Lo so bene, io."}
  ]},
- {n:'La Montagna che Respira', a:'vetta', rules:R(true,true,true), nodes:[
+ {n:'La Montagna che Respira', a:'vetta', rules:R(true,true,true,true), nodes:[
   {id:'wind-3', hand:['wind-2','water-3','light-2','fire-2'],
-   intro:[['X',"Il vento sussurra. Tre viandanti sul sentiero. Uno parla troppo."],['L',"…Sta parlando di me? Sta parlando di me."],['X',"La vetta è chiusa. Solo chi danza col vento può salire fin lassù."],['L',"Quassù vale la regola Elementale: una carta sul simbolo del suo elemento prende +1 su ogni lato, sugli altri simboli −1. In pratica anche le caselle hanno un caratteraccio."]],
+   intro:[['X',"Il vento sussurra. Tre viandanti sul sentiero. Uno parla troppo."],['L',"…Sta parlando di me? Sta parlando di me."],['X',"La vetta è chiusa. Solo chi danza col vento può salire fin lassù."],['L',"Quassù vale la regola Affinità: una carta sul simbolo del suo elemento prende +1 su ogni lato, sugli altri simboli −1. In pratica anche le caselle hanno un caratteraccio."]],
    win:[['X',"Foglia sul ruscello. Il tuo gioco scorre bene. Seguo la corrente."]],
    lose:"Neve sulla pietra. Non sei ancora pronto. Torna a primavera."},
   {id:'earth-4', hand:['earth-3','earth-2','wind-3','water-2'],
@@ -924,7 +982,7 @@ const CH = [
    win:[['X',"Impossibile… la mia tempesta… calmata?!"],['X',"Hai un vento strano dentro, Custode. E ho capito una cosa: il cielo di Eclissi non ha né vento né stelle. Le mie ali ti porteranno alla Torre."]],
    lose:"Spazzato via! AH-AH! Torna quando avrai imparato a volare!"}
  ]},
- {n:"L'Ultima Notte", a:'arcana', rules:R(true,true,true), nodes:[
+ {n:"L'Ultima Notte", a:'arcana', rules:R(true,true,true,true), nodes:[
   {id:'shadow-3', a:'palude', hand:['shadow-2','water-3','earth-3','wind-3'],
    intro:[['X',"Shhh. Le anime della palude stanno dormendo."],['L',"Il… il Mietitore. Non ho paura, eh. Tremo per motivi miei. Freddo. Correnti d'aria."],['X',"Tutti hanno paura di me. Ma io raccolgo solo ciò che è andato perduto. Ed Eclissi ha perduto qualcosa di molto prezioso."],['X',"Se vuoi sapere cosa, gioca con me."]],
    win:[['X',"Bene. Le anime hanno visto il tuo gioco: sei gentile."],['X',"Eclissi era la luna di Serafina, la sua metà. Quando si sono separate, Eclissi ha dimenticato di essere stata luce. Cerca Serafina nelle Rovine Celesti."]],
@@ -939,7 +997,7 @@ const CH = [
    lose:"Torna nell'oscurità, Custode. Io ti aspetterò."}
  ]}
 ];
-CH.push({n:'Il Piano Distorto', a:'distorto', extra:true, rules:{same:true, plus:true, elem:true, distort:true, open:true}, nodes:[
+CH.push({n:'Il Piano Distorto', a:'distorto', extra:true, rules:{same:true, plus:true, elem:true, cycle:true, distort:true, open:true}, nodes:[
   {id:'prism-4', boss:true, diff:'hard', hand:['fire-4','water-4','wind-4','shadow-4'],
    intro:[['X',"…Fuoco. Acqua. Terra. Vento. Luce. Ombra. Tutti. Nessuno."],
     ['L',"Ok, questo è inquietante. Chi sei? E perché parli come una lista della spesa?"],
@@ -1054,9 +1112,9 @@ const MPOOL = [
  {k:'win', goal:2, g:15, t:'Vinci 2 partite'},
  {k:'win', goal:3, g:25, t:'Vinci 3 partite'},
  {k:'flip', goal:10, g:15, t:'Conquista 10 carte avversarie'},
- {k:'same', goal:1, g:20, t:'Fai un Identico'},
- {k:'plus', goal:1, g:20, t:'Fai una Somma'},
- {k:'combo', goal:1, g:25, t:'Fai una Combo'},
+ {k:'same', goal:1, g:20, t:'Fai uno Specchio'},
+ {k:'plus', goal:1, g:20, t:'Fai un\u2019Armonia'},
+ {k:'combo', goal:1, g:25, t:'Fai una Reazione a catena'},
  {k:'quick', goal:1, g:15, t:'Vinci in Battaglia rapida'},
  {k:'story', goal:1, g:15, t:'Vinci una tappa della Storia'},
  {k:'big', goal:1, g:25, t:'Vinci con 7 carte o più'}
@@ -1167,8 +1225,9 @@ function quickOpp(p){
 
 /* ---------- Match ---------- */
 let S, CFG = {mode:'quick', rules:{same:true, plus:true, elem:false, open:true}, diff:'normal', opp:null, oppName:'Avversario', arena:'lava'};
-const setup = {arena:'random', rules:{same:true, plus:true, elem:false, open:true}, diff:'normal'};
+const setup = {arena:'random', rules:{same:true, plus:true, elem:false, cycle:true, open:true}, diff:'normal'};
 try { const s = JSON.parse(localStorage.getItem('triadia-setup2')); if (s && s.rules) Object.assign(setup, s); } catch(e){}
+if (setup.rules.cycle === undefined) setup.rules.cycle = true;
 
 function randElems(rules){
   const elems = Array(9).fill(null);
@@ -1230,7 +1289,7 @@ const TUTS = {
   p:[['light-1',[6,5,6,4]],['water-1',[2,5,6,3]],['earth-1',[3,7,5,2]],['fire-1',[4,3,4,5]],['wind-1',[5,5,5,5]]],
   a:[['shadow-1',[3,4,2,5]],['shadow-1',[5,2,4,6]],['shadow-1',[6,3,5,4]],['shadow-1',[2,3,2,3]],['shadow-1',[1,1,1,1]]],
   steps:[
-   ['p',0,4,"Ogni carta ha quattro numeri: in alto, a destra, in basso e a sinistra. Più il numero è alto, più quel lato è forte (la A vale 10). Tocca la mia carta, quella che brilla, e poi la casella al centro.","Perfetto. Ora tocca a lui: guarda cosa fa."],
+   ['p',0,4,"Ogni carta ha quattro numeri: in alto, a destra, in basso e a sinistra. Più il numero è alto, più quel lato è forte (la X vale 10, come il numero romano). Tocca la mia carta, quella che brilla, e poi la casella al centro.","Perfetto. Ora tocca a lui: guarda cosa fa."],
    ['a',0,5],
    ['p',1,2,"Si è messo accanto a noi: il suo 5 a sinistra contro il nostro 5 a destra. Pareggio, quindi niente cattura: serve un numero più alto. Ora metti Gocciolina sopra di lui: il lato basso di Gocciolina (6) contro il lato alto della sua carta (3).","6 batte 3: la carta cambia colore e diventa nostra!"],
    ['a',1,1],
@@ -1240,39 +1299,39 @@ const TUTS = {
    ['a',3,3],
    ['p',4,6,"Ultima mossa. Metti Sbuffo nell'angolo in basso a sinistra: il suo 5 in alto batte il 2 dell'avversario."]
   ]},
- same:{arena:'citta', chap:'Allenamento · Identico', rules:{same:true, plus:false, elem:false, open:true}, elems:[],
-  intro:[['L',"In città si gioca con la regola Identico. Prima di sfidare qualcuno sul serio, una partita di prova con il nostro sparring di fiducia."],
+ same:{arena:'citta', chap:'Allenamento · Specchio', rules:{same:true, plus:false, elem:false, open:true}, elems:[],
+  intro:[['L',"In città si gioca con la regola Specchio. Prima di sfidare qualcuno sul serio, una partita di prova con il nostro sparring di fiducia."],
          ['X',"…stavolta ho portato le carte buone."],
          ['L',"Lo dice sempre. Guarda il campo: ci sono già tre carte sue. Le useremo a nostro vantaggio."]],
-  outro:[['L',"Visto? Con Identico anche numeri bassi possono ribaltare una partita."],
-         ['L',"Consiglio da lanterna: prima di giocare, cerca i numeri uguali tra le tue carte e quelle sul campo. È lì che nascono gli Identico. Ora andiamo in piazza!"]],
+  outro:[['L',"Visto? Con lo Specchio anche numeri bassi possono ribaltare una partita."],
+         ['L',"Consiglio da lanterna: prima di giocare, cerca i numeri uguali tra le tue carte e quelle sul campo. È lì che nascono gli Specchi. Ora andiamo in piazza!"]],
   pre:[[0,'shadow-1',[3,2,3,3]],[1,'fire-1',[5,4,4,6]],[3,'earth-1',[4,7,3,2]]], opp:'shadow-1',
   p:[['light-1',[4,3,5,7]],['water-1',[6,6,6,6]],['wind-1',[3,3,3,5]]],
   a:[['wind-1',[2,2,2,2]],['shadow-1',[1,1,1,1]],['fire-1',[1,1,1,1]]],
   steps:[
-   ['p',0,4,"Regola Identico: se due o più lati della carta che giochi sono UGUALI ai lati che toccano, le carte nemiche coinvolte diventano tue, anche se non le batti. Guarda me: in alto ho 4, come il 4 in basso della carta sopra. A sinistra ho 7, come il 7 a destra della carta a sinistra. Mettimi al centro!","IDENTICO! E non è finita: la carta catturata in alto ha attaccato quella nell'angolo con il suo 6 contro il 2. Si chiama Combo: le carte prese con Identico attaccano a loro volta le vicine."],
+   ['p',0,4,"Regola Specchio: se due o più lati della carta che giochi sono UGUALI ai lati che toccano, le carte nemiche coinvolte diventano tue, anche se non le batti. Guarda me: in alto ho 4, come il 4 in basso della carta sopra. A sinistra ho 7, come il 7 a destra della carta a sinistra. Mettimi al centro!","SPECCHIO! E non è finita: la carta catturata in alto ha attaccato quella nell'angolo con il suo 6 contro il 2. Si chiama Reazione a catena: le carte prese con lo Specchio attaccano a loro volta le vicine."],
    ['a',0,5],
-   ['p',1,8,"Identico non cancella le regole normali: se un tuo numero è più alto, catturi come sempre. Metti Gocciolina nell'angolo in basso a destra: il suo 6 in alto contro il 2 in basso dell'avversario.","Presa normale. Le due regole lavorano insieme."],
+   ['p',1,8,"Lo Specchio non cancella le regole normali: se un tuo numero è più alto, catturi come sempre. Metti Gocciolina nell'angolo in basso a destra: il suo 6 in alto contro il 2 in basso dell'avversario.","Presa normale. Le due regole lavorano insieme."],
    ['a',1,2],
    ['p',2,7,"Ultima carta: metti Sbuffo in basso al centro. Lì non rischia nulla."]
   ]},
- plus:{arena:'porto', chap:'Allenamento · Somma', rules:{same:true, plus:true, elem:false, open:true}, elems:[],
-  intro:[['L',"Al porto arriva la regola Somma. Sì, c'è della matematica. No, non puoi saltarla. Partita di prova!"],
+ plus:{arena:'porto', chap:'Allenamento · Armonia', rules:{same:true, plus:true, elem:false, open:true}, elems:[],
+  intro:[['L',"Al porto arriva la regola Armonia. Sì, c'è della matematica. No, non puoi saltarla. Partita di prova!"],
          ['X',"…ho studiato le tabelline."]],
-  outro:[['L',"Con un 2 e un 1 abbiamo preso tre carte. Ecco perché la Somma è la regola preferita di chi ha carte deboli."],
-         ['L',"Consiglio: le carte con numeri bassi sono perfette per la Somma, perché conta solo che le somme siano uguali. Andiamo a cercare una barca!"]],
+  outro:[['L',"Con un 2 e un 1 abbiamo preso tre carte. Ecco perché l'Armonia è la regola preferita di chi ha carte deboli."],
+         ['L',"Consiglio: le carte con numeri bassi sono perfette per l'Armonia, perché conta solo che le somme siano uguali. Andiamo a cercare una barca!"]],
   pre:[[0,'shadow-1',[3,2,4,3]],[1,'water-1',[5,4,6,6]],[3,'earth-1',[3,7,4,3]]], opp:'shadow-1',
   p:[['light-1',[2,4,5,1]],['water-1',[6,6,6,6]],['wind-1',[3,3,3,5]]],
   a:[['wind-1',[2,2,2,2]],['shadow-1',[1,1,1,1]],['fire-1',[1,1,1,1]]],
   steps:[
-   ['p',0,4,"Regola Somma: si sommano i numeri dei lati che si toccano. Se due o più vicini danno la stessa somma, le carte nemiche coinvolte sono tue. Io ho 2 in alto: con il 6 della carta sopra fa 8. Ho 1 a sinistra: con il 7 della carta a sinistra fa di nuovo 8. Due somme uguali: mettimi al centro!","SOMMA! E la carta presa in alto ha fatto Combo sull'angolo. Non male per una lanterna con un 1 a sinistra."],
+   ['p',0,4,"Regola Armonia: si sommano i numeri dei lati che si toccano. Se due o più vicini danno la stessa somma, le carte nemiche coinvolte sono tue. Io ho 2 in alto: con il 6 della carta sopra fa 8. Ho 1 a sinistra: con il 7 della carta a sinistra fa di nuovo 8. Due somme uguali: mettimi al centro!","ARMONIA! E la carta presa in alto ha innescato una reazione a catena sull'angolo. Non male per una lanterna con un 1 a sinistra."],
    ['a',0,5],
    ['p',1,8,"I numeri alti catturano anche senza regole speciali: metti Gocciolina nell'angolo in basso a destra, il suo 6 contro il 2.","Presa normale. Tutto sotto controllo."],
    ['a',1,2],
    ['p',2,7,"Ultima carta: Sbuffo in basso al centro. Qui le somme non coincidono, quindi niente sorprese."]
   ]},
- elem:{arena:'vetta', chap:'Allenamento · Elementale', rules:{same:true, plus:true, elem:true, open:true}, elems:[null,null,null,null,'fire',null,null,null,'water'],
-  intro:[['L',"Quassù anche le caselle hanno un caratteraccio: regola Elementale. Ultima partita di prova, promesso."],
+ elem:{arena:'vetta', chap:'Allenamento · Affinità', rules:{same:true, plus:true, elem:true, open:true}, elems:[null,null,null,null,'fire',null,null,null,'water'],
+  intro:[['L',"Quassù anche le caselle hanno un caratteraccio: regola Affinità. Ultima partita di prova, promesso."],
          ['X',"…ho freddo. Giochiamo in fretta."]],
   outro:[['L',"Ricorda: guarda sempre i simboli prima di giocare. Un +1 nella casella giusta vince la partita, un −1 in quella sbagliata te la fa perdere."],
          ['L',"E ora, in cima, ci aspetta un vento molto chiassoso. Copriti, Custode."]],
@@ -1280,14 +1339,31 @@ const TUTS = {
   p:[['fire-1',[5,6,4,3]],['water-1',[4,4,4,4]],['earth-1',[5,5,5,5]]],
   a:[['wind-1',[3,3,3,3]],['shadow-1',[2,1,2,2]]],
   steps:[
-   ['p',0,4,"Vedi i simboli sulle caselle? Regola Elementale: una carta sul simbolo del SUO elemento prende +1 su tutti i lati, su un simbolo diverso −1. Tizzone è di fuoco e al centro c'è una fiamma: il suo 6 a destra diventa 7 e batte il 6 della carta accanto. Senza bonus sarebbe stato un pareggio. Mettilo al centro!","Visto il +1 verde? Una piccola spinta che cambia tutto."],
+   ['p',0,4,"Vedi i simboli sulle caselle? Regola Affinità: una carta sul simbolo del SUO elemento prende +1 su tutti i lati, su un simbolo diverso −1. Tizzone è di fuoco e al centro c'è una fiamma: il suo 6 a destra diventa 7 e batte il 6 della carta accanto. Senza bonus sarebbe stato un pareggio. Mettilo al centro!","Visto il +1 verde? Una piccola spinta che cambia tutto."],
    ['a',0,1],
    ['p',1,8,"In basso a destra c'è una goccia: casella d'acqua. Gocciolina ci sta benissimo: i suoi 4 diventano 5 e battono il 4 della carta a sinistra. Attento al contrario: una carta di fuoco su quella goccia perderebbe un punto.","Acqua sull'acqua: presa!"],
    ['a',1,3],
    ['p',2,6,"Ultima: Muschiosso nell'angolo libero. Senza simbolo non ha bonus né malus, ma il suo 5 in alto batte comunque il 2."]
   ]}
+
+ ,cycle:{arena:'lava', chap:'Allenamento · Ciclo degli elementi', rules:{same:false, plus:false, elem:false, cycle:true, open:true}, elems:[],
+  intro:[['L',"Al vulcano gli elementi litigano più del solito. È il momento di imparare il Ciclo degli elementi."],
+         ['L',"Fuoco batte Vento, Vento batte Terra, Terra batte Acqua e Acqua batte Fuoco. Luce e Ombra invece si battono a vicenda: vince chi attacca per primo."],
+         ['X',"…io sono Ombra. Quindi un po' ti batto. Forse."]],
+  outro:[['L',"Ricapitolando: quando attacchi un elemento debole prendi +1 su quel lato. Ma vale anche per l'avversario, quindi occhio a chi ti metti accanto."],
+         ['L',"Se te lo dimentichi, il Ciclo è spiegato anche in Come si gioca. Ora entriamo nella forgia: fa caldo, ma io sono abituato."]],
+  pre:[[1,'wind-1',[2,2,5,2]],[0,'earth-1',[3,3,3,3]],[2,'water-1',[3,3,3,3]],[7,'shadow-1',[7,6,3,6]]], opp:'shadow-1',
+  p:[['fire-1',[5,5,4,4]],['earth-1',[5,3,3,4]],['light-1',[4,4,4,6]]],
+  a:[['water-1',[3,4,5,5]],['shadow-1',[3,3,4,2]]],
+  steps:[
+   ['p',0,4,"Sopra il centro c'è una carta di Vento con 5 in basso. Il 5 in alto di Tizzone farebbe pari, ma Fuoco batte Vento: +1, quindi 6 contro 5. Mettilo al centro!","VANTAGGIO! Il fuoco ha bruciato il vento."],
+   ['a',0,5],
+   ['p',1,8,"Ahi: Acqua batte Fuoco, e il suo 5 contro il nostro 5 è diventato 6. Ma Terra batte Acqua: metti Muschiosso nell'angolo sotto la Gocciolina nemica, 5 contro 5 più il bonus!","Ripresa! Ogni elemento ha qualcuno che lo batte."],
+   ['a',1,3],
+   ['p',2,6,"Ombraluna si è messo a sinistra con 4 in basso. Luce e Ombra si battono a vicenda, e chi attacca prende il bonus: metti Lanternino nell'angolo sotto di lui!"]
+  ]}
 };
-const TUT_BEFORE = {1:'same', 2:'plus', 4:'elem'};
+const TUT_BEFORE = {1:'same', 2:'plus', 3:'cycle', 4:'elem'};
 if (!SV.tuts) SV.tuts = {};
 function fitCoach(T){
   const c = $('coach'), p = $('coachT');
@@ -1527,9 +1603,11 @@ const ARENAS = {
   ['glow',400,90,230,200,'255,235,160'],['flowv',930,300,70,230,'230,250,255'],['flowv',130,240,60,130,'230,250,255'],['flowv',600,1230,40,100,'230,250,255'],['seam',140,365,740,715,'255,215,110']]}
 };
 let A = ARENAS.lava;
-const TOPZ0 = 170, BOTZ = 196;
+const TOPZ0 = 170, BOTZ0 = 206;
+let BOTZ = BOTZ0;
 function layout(){
   const g = $('game'), W = g.clientWidth, H = g.clientHeight;
+  BOTZ = BOTZ0 + (parseFloat(getComputedStyle(g).getPropertyValue('--sab')) || 0);
   const [x0, y0, x1, y1] = A.g, iw = x1 - x0, ih = y1 - y0;
   const TOPZ = g.classList.contains('tut') && !$('coach').hidden ? Math.max(150, $('coach').offsetHeight + 64) : TOPZ0;
   const gw = Math.min(W * .94, (H - TOPZ - BOTZ) * iw / ih);
@@ -1570,7 +1648,7 @@ function tapCell(i){
   }
   const h = S.sel; S.sel = null; play('p', h, i);
 }
-const LABEL = {same:'IDENTICO!', plus:'SOMMA!', combo:'COMBO!'};
+const LABEL = {same:'SPECCHIO!', plus:'ARMONIA!', combo:'CATENA!'};
 async function play(who, h, i){
   const me = S;
   S.busy = true;
@@ -1586,7 +1664,7 @@ async function play(who, h, i){
   const {b, ev} = resolve(S.board, i, CFG.rules, S.elems);
   if (who === 'p' && CFG.mode !== 'tut') ev.forEach(e => { track('flip', e.js.length); if (e.t !== 'basic') track(e.t); });
   for (const e of ev){
-    if (LABEL[e.t]){ banner(LABEL[e.t]); await wait(450); if (S !== me) return; }
+    if (LABEL[e.t] || e.adv){ banner(LABEL[e.t] || 'VANTAGGIO!'); await wait(450); if (S !== me) return; }
     for (const j of e.js){
       const el = $('board').children[j].querySelector('.card');
       el.classList.remove('flip'); void el.offsetWidth; el.classList.add('flip');
@@ -1777,7 +1855,11 @@ const FX = (() => {
 /* ---------- Story map ---------- */
 const CROWN = '<svg class="crown" viewBox="0 0 44 26" aria-hidden="true"><path d="M3 23L6 6L15 15L22 2L29 15L38 6L41 23Z" fill="#f5b942" stroke="#170f20" stroke-width="2.5" stroke-linejoin="round"/></svg>';
 const LOCK = '<svg viewBox="0 0 16 16" width="13" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="2" fill="#d8ccf0"/><path d="M5 7V5a3 3 0 0 1 6 0v2" fill="none" stroke="#d8ccf0" stroke-width="2"/></svg>';
-const RULE_N = {same:'Identico', plus:'Somma', elem:'Elementale', distort:'Distorsione'};
+function cycleRow(){
+  const ic = el => `<i style="--ec:${EL[el].c}" title="${EL[el].n}">${elIcon(el)}</i>`;
+  return `${ic('fire')}<b>›</b>${ic('wind')}<b>›</b>${ic('earth')}<b>›</b>${ic('water')}<b>›</b>${ic('fire')}<span class="sep"></span>${ic('light')}<b>⇄</b>${ic('shadow')}`;
+}
+const RULE_N = {same:'Specchio', plus:'Armonia', elem:'Affinità', cycle:'Ciclo degli elementi', distort:'Distorsione'};
 function nodeState(N){ if (SV.done.includes(N.id)) return 'done'; return N.gi === 0 || SV.done.includes(NODES[N.gi - 1].id) ? 'cur' : 'lock'; }
 function openPath(){
   const box = $('chapters');
@@ -1977,7 +2059,7 @@ const encEl = e => e.map(x => x ? EL6.indexOf(x) : '-').join('');
 const decEl = s => [...s].map(ch => ch === '-' ? null : EL6[+ch]);
 function onlineCfg(round){
   const keys = Object.keys(ARENAS).filter(k => k !== 'distorto');
-  const rules = {same:!!setup.rules.same, plus:!!setup.rules.plus, elem:!!setup.rules.elem, open:!!setup.rules.open};
+  const rules = {same:!!setup.rules.same, plus:!!setup.rules.plus, elem:!!setup.rules.elem, cycle:setup.rules.cycle !== false, open:!!setup.rules.open};
   return {round, arena:setup.arena !== 'random' && ARENAS[setup.arena] ? setup.arena : keys[Math.floor(Math.random() * keys.length)], rules, el:encEl(randElems(rules)), first:Math.random() < .5 ? 'host' : 'guest'};
 }
 const handData = role => playerHand().map(c => ({id:c.id, v:c.chroma || '', u:role[0] + c.uid}));
@@ -2111,14 +2193,14 @@ $('onCode').addEventListener('input', e => { e.target.value = e.target.value.toU
 function openSetup(){
   ($('ar-' + setup.arena) || $('ar-random')).checked = true;
   $('onName').value = myName(true); syncSetup();
-  $('rSame').checked = setup.rules.same; $('rPlus').checked = setup.rules.plus; $('rElem').checked = setup.rules.elem; $('rOpen').checked = setup.rules.open;
+  $('rSame').checked = setup.rules.same; $('rPlus').checked = setup.rules.plus; $('rCycle').checked = setup.rules.cycle !== false; $('rElem').checked = setup.rules.elem; $('rOpen').checked = setup.rules.open;
   ({easy:$('dE'), normal:$('dN'), hard:$('dH')})[setup.diff].checked = true;
   $('sheet').hidden = false;
 }
 $('setForm').addEventListener('submit', e => {
   e.preventDefault();
   setup.diff = e.target.diff.value; setup.arena = e.target.arena.value;
-  setup.rules = {same:$('rSame').checked, plus:$('rPlus').checked, elem:$('rElem').checked, open:$('rOpen').checked};
+  setup.rules = {same:$('rSame').checked, plus:$('rPlus').checked, elem:$('rElem').checked, cycle:$('rCycle').checked, open:$('rOpen').checked};
   try { localStorage.setItem('triadia-setup2', JSON.stringify(setup)); } catch(err){}
   if (!$('vsO').checked){ $('sheet').hidden = true; startQuick(); return; }
   const nm = $('onName').value.trim(); try { localStorage.setItem('triadia-name', nm); } catch(err){}
@@ -2204,6 +2286,8 @@ function zoneReveal(eye, title, sub, arena){
 }
 
 buildLogo($('hlogo'));
+$('cycRow').innerHTML = cycleRow();
+['hp1','hp2'].forEach(id => $(id).addEventListener('change', () => { $('hpBase').hidden = !$('hp1').checked; $('hpRules').hidden = $('hp1').checked; }));
 ensureDaily();
 goHome();
 

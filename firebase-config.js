@@ -1,6 +1,4 @@
-/* Triadia · configurazione del multiplayer online (Firebase Realtime Database).
-   Incolla qui i dati della tua app web Firebase (vedi LEGGIMI.md, passo 1).
-   Finché resta null, la Battaglia rapida funziona solo contro il computer. */
+/* Triadia · configurazione del multiplayer online (Firebase Realtime Database). */
 window.TRIADIA_FIREBASE = {
   apiKey: "AIzaSyAv4iBFb1_YRRwHdyok7PSvKsKKSqCGdrk",
   authDomain: "triadia-f6b5d.firebaseapp.com",
