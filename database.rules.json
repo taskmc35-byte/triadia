@@ -1,0 +1,11 @@
+{
+  "rules": {
+    "rooms": {
+      "$code": {
+        ".read": "$code.matches(/^[A-Z0-9]{5}$/)",
+        ".write": "$code.matches(/^[A-Z0-9]{5}$/)",
+        ".validate": "!newData.exists() || newData.hasChildren(['cfg', 'host'])"
+      }
+    }
+  }
+}
