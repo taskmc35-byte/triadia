@@ -613,6 +613,8 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z
 .hpage{display:grid;gap:10px}
 .hnote{margin:0;font-size:12.5px;color:var(--muted);line-height:1.4}
 @media (max-height:700px){.tg small{display:none}.tg{padding:8px 10px}}
+#scrHome .show .tri{height:calc(100% * var(--k,1))}
+#scrHome .show .tri.s{height:calc(74% * var(--k,1))}
 </style>
 </head>
 <body>
@@ -1070,7 +1072,7 @@ const INTER = [
   ['earth-2',"Ehi!"]]
 ];
 
-const LOGO = {"ar":1.6147,"layers":[{"n":"letters","k":"letters","x":0.144,"y":14.086,"w":94.304,"h":85.681},{"n":"lantern","k":"lantern","x":49.82,"y":1.63,"w":33.237,"h":37.253},{"n":"paws","k":"paws","x":52.199,"y":24.563,"w":18.673,"h":15.017},{"n":"card1","k":"card","x":2.523,"y":23.632,"w":11.391,"h":17.579},{"n":"card2","k":"card","x":22.495,"y":3.958,"w":20.692,"h":32.247},{"n":"card3","k":"card","x":80.461,"y":22.119,"w":9.589,"h":20.023},{"n":"card4","k":"card","x":92.934,"y":48.079,"w":6.921,"h":16.182},{"n":"fx0","k":"star","x":41.096,"y":0.233,"w":7.714,"h":15.832},{"n":"fx1","k":"star","x":13.266,"y":15.134,"w":4.326,"h":8.847},{"n":"fx2","k":"star","x":48.306,"y":15.716,"w":3.389,"h":6.868},{"n":"fx3","k":"star","x":40.159,"y":17.928,"w":6.994,"h":13.853},{"n":"fx4","k":"star","x":11.824,"y":18.743,"w":12.473,"h":13.97},{"n":"fx5","k":"star","x":43.043,"y":24.447,"w":1.442,"h":3.027},{"n":"fx6","k":"star","x":93.872,"y":33.411,"w":3.821,"h":7.683},{"n":"fx7","k":"star","x":88.825,"y":36.671,"w":7.859,"h":11.991},{"n":"fx8","k":"swoosh","x":81.831,"y":41.094,"w":1.226,"h":2.445},{"n":"fx9","k":"swoosh","x":7.787,"y":63.679,"w":5.119,"h":4.54},{"n":"fx10","k":"star","x":95.89,"y":64.61,"w":3.533,"h":7.218},{"n":"fx11","k":"star","x":2.668,"y":64.726,"w":5.335,"h":10.943}],"clip":[[49.68,27.47],[50.54,32.36],[51.41,27.24],[52.27,26.89],[53.14,36.79],[54.0,28.39],[54.87,28.59],[55.73,28.78],[56.6,27.94],[57.46,28.52],[58.33,28.87],[59.19,29.22],[60.06,29.69],[60.92,30.15],[61.79,30.62],[62.65,31.08],[63.52,31.78],[64.38,32.48],[65.25,32.71],[66.11,33.68],[66.98,34.08],[67.84,34.48],[68.71,37.95],[69.57,38.42],[70.44,35.23],[71.3,35.29],[72.17,35.35],[73.04,38.53],[73.9,33.53],[74.77,32.13],[75.63,30.73],[76.5,30.28],[77.36,30.02],[78.23,29.75],[79.09,29.49],[79.96,29.22],[80.82,28.96],[81.69,28.69],[82.55,28.43]]};
+const LOGO = {"ar":1.6147,"layers":[{"n":"letters","k":"letters","x":0.144,"y":14.086,"w":94.304,"h":85.681},{"n":"lantern","k":"lantern","x":49.82,"y":1.63,"w":33.237,"h":37.253},{"n":"paws","k":"paws","x":52.199,"y":24.563,"w":18.673,"h":15.017},{"n":"card1","k":"card","x":2.523,"y":23.632,"w":11.391,"h":17.579},{"n":"card2","k":"card","x":22.495,"y":3.958,"w":20.692,"h":32.247},{"n":"card3","k":"card","x":80.317,"y":22.119,"w":11.103,"h":20.023},{"n":"card4","k":"card","x":92.934,"y":48.079,"w":6.921,"h":16.182},{"n":"fx0","k":"star","x":41.096,"y":0.233,"w":7.714,"h":15.832},{"n":"fx1","k":"star","x":13.266,"y":15.134,"w":4.326,"h":8.847},{"n":"fx2","k":"star","x":48.306,"y":15.716,"w":3.389,"h":6.868},{"n":"fx3","k":"star","x":40.159,"y":17.928,"w":6.994,"h":13.853},{"n":"fx4","k":"star","x":11.824,"y":18.743,"w":12.473,"h":13.97},{"n":"fx5","k":"star","x":43.043,"y":24.447,"w":1.442,"h":3.027},{"n":"fx6","k":"star","x":93.872,"y":33.411,"w":3.821,"h":7.683},{"n":"fx7","k":"star","x":88.825,"y":36.671,"w":7.859,"h":11.991},{"n":"fx8","k":"swoosh","x":81.831,"y":41.094,"w":1.226,"h":2.445},{"n":"fx9","k":"swoosh","x":7.787,"y":63.679,"w":5.119,"h":4.54},{"n":"fx10","k":"star","x":95.89,"y":64.61,"w":3.533,"h":7.218},{"n":"fx11","k":"star","x":2.668,"y":64.726,"w":5.335,"h":10.943}],"clip":[[49.68,27.47],[50.54,32.36],[51.41,27.24],[52.27,26.89],[53.14,36.79],[54.0,28.39],[54.87,28.59],[55.73,28.78],[56.6,27.94],[57.46,28.52],[58.33,28.87],[59.19,29.22],[60.06,29.69],[60.92,30.15],[61.79,30.62],[62.65,31.08],[63.52,31.78],[64.38,32.48],[65.25,32.71],[66.11,33.68],[66.98,34.08],[67.84,34.48],[68.71,37.95],[69.57,38.42],[70.44,35.23],[71.3,35.29],[72.17,35.35],[73.04,38.53],[73.9,33.53],[74.77,32.13],[75.63,30.73],[76.5,30.28],[77.36,30.02],[78.23,29.75],[79.09,29.49],[79.96,29.22],[80.82,28.96],[81.69,28.69],[82.55,28.43]]};
 const NODES = [];
 const isExtra = N => !!CH[N.ci].extra;
 CH.forEach((c, ci) => c.nodes.forEach(n => { n.ci = ci; n.gi = NODES.length; NODES.push(n); }));
@@ -1181,9 +1183,20 @@ function homeShowcase(){
   const pick = shuffle(Object.keys(RIG).filter(id => id.endsWith('-1'))).slice(0, 3);
   box.innerHTML = pick.map((id, i) => `<div class="tri${i !== 1 ? ' s' : ''}" style="--fl:${rnd(3.6, 4.8).toFixed(2)}s;--hd:${rnd(3.8, 5.2).toFixed(2)}s;--dl:-${rnd(0, 3).toFixed(2)}s"><span class="sh"></span>${rigHTML(id)}</div>`).join('');
   const tris = [...box.children];
+  fitShow();
   Promise.all([...box.querySelectorAll('img')].map(im => im.decode ? im.decode().catch(() => {}) : 0)).then(() => requestAnimationFrame(() => tris.forEach(t => t.classList.add('in'))));
 }
-function goHome(){ renderHome(); homeShowcase(); show('scrHome'); }
+/* the three Triadi must always fit side by side: shrink them together when the wider ones would overflow the screen */
+function fitShow(){
+  const box = $('homeShow'), t = box && [...box.children];
+  if (!t || t.length < 2 || box.offsetParent === null) return;
+  box.style.setProperty('--k', 1);
+  const span = t[t.length - 1].getBoundingClientRect().right - t[0].getBoundingClientRect().left;
+  const k = Math.min(1, box.clientWidth * .98 / span);
+  box.style.setProperty('--k', k.toFixed(3));
+}
+addEventListener('resize', fitShow);
+function goHome(){ renderHome(); show('scrHome'); homeShowcase(); }
 function renderHome(){
   refreshGems();
   const d = SV.done.length, next = NODES.find(n => !SV.done.includes(n.id));

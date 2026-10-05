@@ -1,6 +1,6 @@
 /* Triadia service worker: tutto il gioco viene salvato sul telefono e funziona anche offline.
    Ogni volta che pubblichi una nuova versione cambia VERSION (lo script di build lo fa da solo). */
-const VERSION = 'triadia-1.0.0-769eafc8';
+const VERSION = 'triadia-1.0.0-1533eeee';
 const FILES = [
 "./",
 "index.html",
