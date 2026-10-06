@@ -1,6 +1,9 @@
-/* Triadia service worker: tutto il gioco viene salvato sul telefono e funziona anche offline.
-   Ogni volta che pubblichi una nuova versione cambia VERSION (lo script di build lo fa da solo). */
-const VERSION = 'triadia-1.0.0-d283f4e9';
+/* Triadia service worker.
+   - La pagina del gioco (index.html) arriva sempre prima dalla rete: chi ha internet vede subito l'ultima versione pubblicata.
+     Senza rete si usa la copia salvata, quindi il gioco funziona anche offline.
+   - Immagini, font e suoni restano salvati sul telefono e vengono riscaricati tutti, ignorando la cache del browser,
+     ogni volta che VERSION cambia (lo script di build la cambia da solo a ogni pubblicazione). */
+const VERSION = 'triadia-1.0.0-1549953d';
 const FILES = [
 "./",
 "index.html",
@@ -377,13 +380,25 @@ const FILES = [
 "img/wind-4.webp",
 "manifest.webmanifest"
 ];
-self.addEventListener('install', e => e.waitUntil(caches.open(VERSION).then(c => c.addAll(FILES)).then(() => self.skipWaiting())));
+const FRESH = p => p.endsWith('/') || p.endsWith('/index.html') || p.endsWith('/firebase-config.js') || p.endsWith('/sw.js');
+self.addEventListener('install', e => e.waitUntil(caches.open(VERSION).then(c =>
+  Promise.all(FILES.map(f => fetch(new Request(f, {cache:'reload'})).then(r => { if (!r.ok) throw new Error('missing ' + f); return c.put(f, r); })))
+).then(() => self.skipWaiting())));
 self.addEventListener('activate', e => e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== VERSION).map(k => caches.delete(k)))).then(() => self.clients.claim())));
+function fresh(req){
+  const net = fetch(req.url, {cache:'no-cache', credentials:'same-origin'}).then(r => {
+    if (r.ok){ const cp = r.clone(); caches.open(VERSION).then(c => c.put(req.mode === 'navigate' ? './' : req.url, cp)); }
+    return r;
+  });
+  const fallback = () => caches.match(req, {ignoreSearch:true}).then(r => r || caches.match('./') || caches.match('index.html'));
+  const timeout = new Promise(res => setTimeout(res, 4000)).then(() => fallback().then(r => r || net));
+  return Promise.race([net.catch(fallback), timeout]);
+}
 self.addEventListener('fetch', e => {
-  const u = new URL(e.request.url);
   if (e.request.method !== 'GET') return;
+  const u = new URL(e.request.url);
   if (u.origin === location.origin){
-    if (u.pathname.endsWith('/firebase-config.js')){ e.respondWith(fetch(e.request).then(r => { const cp = r.clone(); caches.open(VERSION).then(c => c.put(e.request, cp)); return r; }).catch(() => caches.match(e.request))); return; }
+    if (e.request.mode === 'navigate' || FRESH(u.pathname)){ e.respondWith(fresh(e.request)); return; }
     e.respondWith(caches.match(e.request, {ignoreSearch:true}).then(r => r || fetch(e.request)));
   } else if (u.hostname === 'www.gstatic.com'){
     e.respondWith(caches.match(e.request).then(r => r || fetch(e.request).then(res => { const cp = res.clone(); caches.open(VERSION).then(c => c.put(e.request, cp)); return res; })));

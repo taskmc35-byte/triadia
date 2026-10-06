@@ -79,7 +79,7 @@ I progressi di ogni giocatore vengono copiati anche su Firebase, sotto un codice
 
 ## Pubblicare un aggiornamento
 
-Sostituisci i file nel repository con quelli nuovi e fai di nuovo Commit e Push. Al prossimo avvio con internet, il telefono scarica la nuova versione da solo. **Non toccare `firebase-config.js`** quando aggiorni, altrimenti perdi la configurazione.
+Sostituisci i file nel repository con quelli nuovi e fai di nuovo Commit e Push. Chi apre il gioco con internet vede subito la nuova versione (la pagina viene sempre presa prima dalla rete); immagini e suoni si aggiornano in sottofondo. Il numero di versione è in Impostazioni: se un telefono restasse indietro, "Forza l'aggiornamento" scarica di nuovo il gioco senza toccare i progressi. **Non toccare `firebase-config.js`** quando aggiorni, altrimenti perdi la configurazione.
 
 ## Modalità test
 

@@ -13,7 +13,7 @@
 <link rel="icon" href="icons/favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="stylesheet" href="fonts.css">
-<script>window.TRIADIA_APP = true;</script>
+<script>window.TRIADIA_APP = true; window.TRIADIA_VER = '1.0.0-1549953d';</script>
 <script src="firebase-config.js"></script>
 <title>Triadia</title>
 <style>
@@ -657,6 +657,7 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z
 .clrow b{font-family:var(--f-display);font-weight:400;font-size:20px;letter-spacing:.08em;color:var(--gold);text-align:center;user-select:all}
 .clrow .btn{--c:7px;padding:6px 12px 8px;font-size:14px}
 #clInput{text-transform:uppercase;letter-spacing:.2em;font-family:var(--f-display);font-size:22px;text-align:center}
+.vrow{margin:0;text-align:center}.vrow .link{color:var(--gold);font-size:12.5px;padding:0}
 </style>
 </head>
 <body>
@@ -840,6 +841,7 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z
         <div class="row"><button class="btn" id="clCancel" type="button" style="flex:1">Annulla</button><button class="btn gold" id="clLoad" type="button" style="flex:2">Recupera</button></div>
       </div>
     </div>
+    <p class="hnote vrow" id="verRow" hidden>Versione <b id="verN"></b> · <button class="link" id="verBtn" type="button">Forza l'aggiornamento</button></p>
     <button class="btn gold" id="sndClose">Fatto</button>
   </div>
 </div>
@@ -2743,6 +2745,14 @@ $('mHelp').onclick = () => $('help').hidden = false;
 });
 $('mSnd').onclick = () => $('sndSheet').hidden = false;
 $('sndClose').onclick = () => $('sndSheet').hidden = true;
+if (window.TRIADIA_VER){
+  $('verRow').hidden = false; $('verN').textContent = window.TRIADIA_VER;
+  /* last resort: drop the offline copy (never the progress) and reload the latest version */
+  $('verBtn').onclick = async () => {
+    try { const rs = await navigator.serviceWorker.getRegistrations(); await Promise.all(rs.map(r => r.unregister())); const ks = await caches.keys(); await Promise.all(ks.map(k => caches.delete(k))); } catch(e){}
+    location.reload();
+  };
+}
 $('pBack').onclick = goHome; $('cBack').onclick = goHome; $('sBack').onclick = goHome;
 $('bExit').onclick = () => { if (CFG.mode === 'online'){ leaveOnline(); return; } if (CFG.mode === 'tut' && S && S.tut){ const t = S.tut; S = null; $('coach').hidden = true; $('over').hidden = true; t.done(); return; } S = null; $('over').hidden = true; if (CFG.mode === 'story') openPath(); else goHome(); };
 $('bHelp').onclick = () => $('help').hidden = false;
