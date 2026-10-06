@@ -13,7 +13,7 @@
 <link rel="icon" href="icons/favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="stylesheet" href="fonts.css">
-<script>window.TRIADIA_APP = true; window.TRIADIA_VER = '1.0.0-1549953d';</script>
+<script>window.TRIADIA_APP = true; window.TRIADIA_VER = '1.0.0-9fec29b3';</script>
 <script src="firebase-config.js"></script>
 <title>Triadia</title>
 <style>
@@ -658,11 +658,70 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z
 .clrow .btn{--c:7px;padding:6px 12px 8px;font-size:14px}
 #clInput{text-transform:uppercase;letter-spacing:.2em;font-family:var(--f-display);font-size:22px;text-align:center}
 .vrow{margin:0;text-align:center}.vrow .link{color:var(--gold);font-size:12.5px;padding:0}
+/* studio splash */
+.splash{position:fixed;inset:0;z-index:80;background:#000;display:grid;place-items:center;align-content:center;gap:18px;cursor:pointer}
+.splash.out{opacity:0;transition:opacity .6s ease}
+.nova{position:relative;width:min(300px,72vw)}
+.nlogo{position:relative;aspect-ratio:1770/905}
+.nlogo img{position:absolute;display:block;height:auto;opacity:0}
+.splash.go .n-emb{animation:nEmb .75s .15s cubic-bezier(.2,1.4,.4,1) both}
+.splash.go .n-star{animation:nStar .6s .8s cubic-bezier(.2,1.5,.4,1) both,nGlow 1.6s 1.4s ease-in-out both}
+.splash.go .n-word{animation:nWord .85s 1.25s cubic-bezier(.3,.8,.3,1) both}
+.splash.go .n-tag{animation:nTag .7s 1.9s ease-out both}
+@keyframes nEmb{from{opacity:0;transform:scale(.55) rotate(-10deg)}to{opacity:1;transform:none}}
+@keyframes nStar{from{opacity:0;transform:translateY(55%) scale(.35)}to{opacity:1;transform:none}}
+@keyframes nGlow{0%,100%{filter:none}40%{filter:drop-shadow(0 0 10px #c46fbf) drop-shadow(0 0 22px #9b4a96)}}
+@keyframes nWord{from{opacity:0;clip-path:inset(0 100% 0 0);filter:blur(6px)}to{opacity:1;clip-path:inset(0 0 0 0);filter:none}}
+@keyframes nTag{from{opacity:0;transform:translateY(40%)}to{opacity:.85;transform:none}}
+.nburst{position:absolute;width:60%;aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%) scale(0);background:radial-gradient(circle,rgba(255,255,255,.9) 0,rgba(196,111,191,.6) 30%,rgba(155,74,150,0) 70%);opacity:0;pointer-events:none}
+.splash.go .nburst{animation:nBurst .9s 1.05s ease-out both}
+@keyframes nBurst{0%{opacity:0;transform:translate(-50%,-50%) scale(0)}25%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(2.4)}}
+.nglint{position:absolute;width:14%;aspect-ratio:1;transform:translate(-50%,-50%) scale(0);background:#fff;clip-path:polygon(50% 0,58% 42%,100% 50%,58% 58%,50% 100%,42% 58%,0 50%,42% 42%);filter:drop-shadow(0 0 6px #fff);pointer-events:none}
+.splash.go .nglint{animation:nGlint .9s 1.35s ease-in-out both}
+@keyframes nGlint{0%{transform:translate(-50%,-50%) scale(0) rotate(0)}45%{transform:translate(-50%,-50%) scale(1) rotate(45deg)}100%{transform:translate(-50%,-50%) scale(0) rotate(90deg)}}
+.npres{margin:0;font-family:var(--f-label);font-size:12px;letter-spacing:.4em;color:#888;opacity:0;transition:opacity .8s 2.3s}
+.splash.go .npres{opacity:1}
+@media (prefers-reduced-motion:reduce){.splash.go .nlogo img{animation:none;opacity:1}}
+/* guided tour */
+.tour{position:fixed;inset:0;z-index:70;cursor:pointer;opacity:0;transition:opacity .25s}
+.tour.in{opacity:1}
+.thole{position:fixed;border-radius:16px;box-shadow:0 0 0 9999px rgba(8,4,14,.74),0 0 0 3px #ffe08a,0 0 26px #ffd25e;transition:left .35s cubic-bezier(.3,1,.4,1),top .35s cubic-bezier(.3,1,.4,1),width .35s,height .35s;pointer-events:none;animation:tglow 1.4s ease-in-out infinite}
+.thole.none{left:50%!important;top:50%!important;width:0!important;height:0!important;box-shadow:0 0 0 9999px rgba(8,4,14,.74)}
+@keyframes tglow{50%{box-shadow:0 0 0 9999px rgba(8,4,14,.74),0 0 0 3px #fff3c4,0 0 40px #ffd25e}}
+.tbox{position:fixed;left:12px;right:12px;bottom:calc(var(--edge,18px) + 52px);display:flex;align-items:flex-end;gap:6px;max-width:520px;margin:0 auto;pointer-events:none}
+.tbox.top{bottom:auto;top:max(16px,var(--sat,0px))}
+.tbox.mid{bottom:auto;top:50%;transform:translateY(-50%)}
+.tbox.pop .tbub{animation:pop .35s cubic-bezier(.3,1.5,.5,1)}
+.tpor{flex:none;width:92px;height:130px;display:flex;align-items:flex-end}
+.tpor .rig{height:100%;--fl:3.6s;--hd:4s;--dl:0s;filter:drop-shadow(0 6px 10px rgba(0,0,0,.6))}
+.tbub{flex:1;background:#fff8e6;color:#2a1a10;border:3px solid var(--ink);border-radius:18px;padding:10px 13px 9px;box-shadow:0 5px 0 rgba(0,0,0,.4);font-weight:800;font-size:14.5px;line-height:1.4;min-width:0}
+.tbub b{display:inline-block;margin-bottom:4px;padding:1px 8px;border-radius:8px;border:2px solid var(--ink);background:#ffd84a;font-family:var(--f-display);font-weight:400;font-size:14px}
+.tbub span{display:block;min-height:5.6em}
+.tbub small{display:block;text-align:right;font-size:11px;color:#8a6a40;margin-top:2px}
+.tskip{position:fixed;right:14px;top:max(12px,var(--sat,0px));--c:8px;padding:6px 12px 8px;font-size:13px;z-index:2}
+.tbox.top ~ .tskip{top:auto;bottom:calc(var(--edge,18px))}
+.tour.skipb .tskip{top:auto;bottom:var(--edge,18px)}
 </style>
 </head>
 <body>
 
 
+<div class="splash" id="splash" aria-label="Nova Project">
+  <div class="nova" id="nova">
+    <div class="nlogo">
+      <span class="nburst" style="left:49.83%;top:25.77%"></span>
+      <img class="n-emb" src="img/nova/emb.webp" alt="" style="left:33.107%;top:0.331%;width:33.277%">
+      <img class="n-star" src="img/nova/star.webp" alt="" style="left:39.492%;top:0.000%;width:20.678%">
+      <span class="nglint" style="left:49.83%;top:0%"></span>
+      <img class="n-word" src="img/nova/word.webp" alt="Nova Project" style="left:0.0%;top:82.320%;width:100.0%">
+    </div>
+  </div>
+</div>
+<div class="tour" id="tour" hidden>
+  <div class="thole" id="tHole"></div>
+  <div class="tbox" id="tBox"><div class="tpor" id="tPor"></div><div class="tbub"><b>Lanternino</b><span id="tText"></span><small id="tNext">Tocca per continuare</small></div></div>
+  <button class="btn tskip" id="tSkip" type="button">Salta la guida</button>
+</div>
 <div class="intro" id="intro" role="button" tabindex="0" aria-label="Tocca per iniziare">
   <div class="rays"></div><div class="emb2" id="emb2"></div>
   <h1 class="alogo" id="ilogo" aria-label="Triadia"></h1>
@@ -841,6 +900,7 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z
         <div class="row"><button class="btn" id="clCancel" type="button" style="flex:1">Annulla</button><button class="btn gold" id="clLoad" type="button" style="flex:2">Recupera</button></div>
       </div>
     </div>
+    <button class="btn" id="tourAgain" type="button">Rivedi la guida di Lanternino</button>
     <p class="hnote vrow" id="verRow" hidden>Versione <b id="verN"></b> · <button class="link" id="verBtn" type="button">Forza l'aggiornamento</button></p>
     <button class="btn gold" id="sndClose">Fatto</button>
   </div>
@@ -1484,7 +1544,7 @@ function renderMissions(){
 
 /* ---------- Screens ---------- */
 const SCR = ['scrHome','scrPath','scrCol','scrShop','scrDlg','game'];
-function show(id){ SCR.forEach(x => $(x).hidden = x !== id);
+function show(id){ SCR.forEach(x => $(x).hidden = x !== id); maybeTour(id);
   AUD.music(id === 'scrDlg' ? 'dialog' : id === 'game' ? (CFG && CFG.mode === 'story' && CFG.node && CFG.node.boss ? 'boss' : 'battle') : 'menu'); if (id !== 'scrDlg') clearDialog(); const z = $('zrev'); if (z.dataset.pending){ delete z.dataset.pending; z.hidden = true; z.classList.remove('go'); } }
 function toast(t){ const el = $('toast'); el.innerHTML = t; el.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => el.hidden = true, 2200); }
 /* ---------- Home showcase: 3 random common Triadi, rigged ---------- */
@@ -2315,7 +2375,7 @@ function openCol(){
   $('tReset').onclick = e => {
     const b = e.currentTarget;
     if (!b.dataset.c){ b.dataset.c = 1; b.textContent = 'Tocca ancora per confermare'; return; }
-    SV = {owned:START.slice(), done:[], intro:false, gems:0, chroma:[], skin:{}, daily:null, tuts:{}}; save(); openCol(); toast('Progressi azzerati');
+    SV = {owned:START.slice(), done:[], intro:false, gems:0, chroma:[], skin:{}, daily:null, tuts:{}, tours:{}}; save(); openCol(); toast('Progressi azzerati');
   };
   show('scrCol');
 }
@@ -2454,6 +2514,93 @@ async function allyEffect(id){
   }
 }
 $('bAlly').onclick = allyGo;
+
+/* ---------- Guided tours: Lanternino points at things and explains them, once per screen ---------- */
+const TOURS = {
+  scrHome:[
+    [null, "Eccoti, Custode! Prima di partire ti faccio fare il giro della casa. Non ci vorrà molto: la casa è piccola e io parlo veloce."],
+    ['#mStory', "Qui c'è la Storia: un viaggio a tappe per riaccendere il sole. Batti gli spiriti e le loro carte diventano tue. Io vengo con te, ovviamente: qualcuno deve pur fare luce."],
+    ['#mQuick', "Battaglia rapida: una partita al volo con le tue carte. Puoi sfidare il computer oppure un amico online con un codice. Sì, anche quell'amico che dice sempre di essere imbattibile."],
+    ['#mCol', "La Collezione: tutte le carte che hai conquistato. Toccane una per guardarla da vicino e scegliere quale versione usare. Sono bellissime, lo so. Anche io sono una carta, comunque."],
+    ['#mShop', "Il Negozio: con le gemme compri le versioni cromatiche delle tue carte. Dopo la storia arrivano anche le Prismatiche, quelle che brillano. Più di me. Inaccettabile."],
+    ['#mMis', "Le Missioni: tre al giorno, ognuna ti regala gemme. Completale tutte e ottieni una Gemma dorata: in partita chiama un alleato che arriva a darti una mano. Spesso sono io. Prego."],
+    ['.gchip.gems:not(.goldc)', "Queste sono le tue gemme. Si guadagnano vincendo le tappe e con le missioni. No, non si mangiano. Ho provato."],
+    ['#mSnd', "Le Impostazioni: volume di musica, effetti e voci. E soprattutto il tuo codice di salvataggio online: segnatelo! Se cambi telefono, con quello ritrovi tutto. Io invece non mi ritrovo mai."],
+    ['#mHelp', "Se ti dimentichi le regole, qui c'è il riassunto. Io lo consulto spesso. Per sport, non perché me le dimentico."],
+    ['#mStory', "Il giro è finito! Ora tocca Storia e partiamo: il sole non si riaccende da solo. Purtroppo."]
+  ],
+  scrPath:[
+    ['.chap .chead', "Ogni capitolo è una zona di Triadia. Sotto il titolo vedi le regole in uso: quando ne arriva una nuova, te la spiego prima con una partita di prova. Sono un ottimo insegnante. Chiedi pure a nessuno."],
+    ['.node.cur', "Il cerchio che salta è la prossima sfida: toccalo per affrontarla. Vinci e la carta dello spirito entra nella tua collezione."],
+    ['.node.boss', "Quelli con la corona sono i boss: più tosti degli altri. Se perdi, al tentativo dopo saranno un po' più distratti. Merito mio: li distraggo io."],
+    ['#pCount', "Qui conti le tappe completate. Puoi rigiocarle quando vuoi per guadagnare altre gemme. Le gemme non bastano mai, è una legge della natura."]
+  ],
+  scrCol:[
+    ['#colGrid .elrow', "Le carte sono divise per elemento. Il medaglione in alto è l'elemento, la cornice è la rarità: legno, argento, oro e arcobaleno per le leggendarie."],
+    ['#colGrid button.card', "Tocca una carta per vederla da vicino: puoi inclinarla con il dito e scegliere quale versione cromatica usare in partita. Sì, si può anche solo ammirarla. Lo faccio spesso con la mia."],
+    ['#cCount', "Qui vedi quante carte hai su quante ne esistono. Ventiquattro spiriti… più una sorpresa. Non dico altro. Ho già detto troppo."]
+  ],
+  scrShop:[
+    ['.stabs', "Scegli l'elemento toccando queste icone."],
+    ['.srow', "Ogni carta ha tre versioni cromatiche: due in vendita da subito, la Prismatica dopo aver finito la storia. Si comprano solo per le carte che possiedi."],
+    ['#scrShop .chip.gems', "Le tue gemme sono qui. Se sono poche, le missioni giornaliere sono tue amiche. Io sono tuo amico gratis."]
+  ]
+};
+let tourOn = false;
+function maybeTour(id){
+  if (!TOURS[id] || tourOn) return;
+  SV.tours = SV.tours || {};
+  if (SV.tours[id] || $('intro') || $('splash')) return;
+  if (id === 'scrPath' && !document.querySelector('.node.cur')) return;
+  setTimeout(() => { if (!$(id).hidden && !tourOn && !(SV.tours || {})[id]) runTour(id); }, 350);
+}
+function runTour(id){
+  const steps = TOURS[id], ov = $('tour'), hole = $('tHole'), box = $('tBox'), txt = $('tText');
+  tourOn = true; ov.hidden = false; ov.classList.remove('in'); void ov.offsetWidth; ov.classList.add('in');
+  $('tPor').innerHTML = rigHTML('light-1');
+  let i = -1, timer = null, full = '';
+  const place = el => {
+    if (!el){ hole.classList.add('none'); box.classList.remove('top'); box.classList.add('mid'); ov.classList.remove('skipb'); return; }
+    el.scrollIntoView({block:'nearest'});
+    const r = el.getBoundingClientRect(), pad = 8;
+    hole.classList.remove('none');
+    Object.assign(hole.style, {left:(r.left - pad) + 'px', top:(r.top - pad) + 'px', width:(r.width + pad * 2) + 'px', height:(r.height + pad * 2) + 'px'});
+    box.classList.remove('mid');
+    box.classList.toggle('top', r.top + r.height / 2 > innerHeight * .5);
+    ov.classList.toggle('skipb', r.top < 90);
+  };
+  const type = () => {
+    clearInterval(timer); txt.textContent = ''; let k = 0, last = 0;
+    timer = setInterval(() => {
+      k += 2; txt.textContent = full.slice(0, k);
+      const now = performance.now(), ch = full.slice(Math.max(0, k - 2), k).toLowerCase().replace(/[^a-zàèéìòù]/g, '');
+      if (ch && now - last > AUD.gap('light-1')){ last = now; AUD.blip('light-1', ch[ch.length - 1].normalize('NFD')[0]); }
+      if (k >= full.length){ clearInterval(timer); timer = null; }
+    }, 22);
+  };
+  const next = () => {
+    if (timer){ clearInterval(timer); timer = null; txt.textContent = full; return; }
+    i++;
+    if (i >= steps.length) return end();
+    const [sel, t] = steps[i];
+    const el = sel ? document.querySelector(sel) : null;
+    if (sel && (!el || el.offsetParent === null)) return next();
+    full = t; place(el); type();
+    $('tNext').textContent = i === steps.length - 1 ? 'Tocca per chiudere' : 'Tocca per continuare';
+    box.classList.remove('pop'); void box.offsetWidth; box.classList.add('pop');
+  };
+  const end = () => {
+    clearInterval(timer); tourOn = false;
+    SV.tours = SV.tours || {}; SV.tours[id] = 1; save();
+    ov.classList.remove('in'); setTimeout(() => { ov.hidden = true; $('tPor').innerHTML = ''; }, 300);
+    ov.removeEventListener('click', onTap); $('tSkip').onclick = null; removeEventListener('resize', onRes);
+  };
+  const onTap = e => { if (e.target.closest('#tSkip')) return; next(); };
+  const onRes = () => { if (i >= 0 && i < steps.length){ const sel = steps[i][0]; place(sel ? document.querySelector(sel) : null); } };
+  ov.addEventListener('click', onTap); addEventListener('resize', onRes);
+  $('tSkip').onclick = e => { e.stopPropagation(); end(); };
+  next();
+}
 
 /* ---------- Online multiplayer ----------
    Transport: Firebase Realtime Database (config in firebase-config.js, window.TRIADIA_FIREBASE).
@@ -2745,6 +2892,7 @@ $('mHelp').onclick = () => $('help').hidden = false;
 });
 $('mSnd').onclick = () => $('sndSheet').hidden = false;
 $('sndClose').onclick = () => $('sndSheet').hidden = true;
+$('tourAgain').onclick = () => { SV.tours = {}; save(); $('sndSheet').hidden = true; goHome(); };
 if (window.TRIADIA_VER){
   $('verRow').hidden = false; $('verN').textContent = window.TRIADIA_VER;
   /* last resort: drop the offline copy (never the progress) and reload the latest version */
@@ -2792,11 +2940,25 @@ function buildLogo(el){
   const imgs = [...el.querySelectorAll('img')];
   return Promise.race([Promise.all(imgs.map(i => i.decode ? i.decode().catch(() => {}) : Promise.resolve())), new Promise(r => setTimeout(r, 2500))]);
 }
+/* ---------- Studio splash: black screen with the agency logo, before the game intro ---------- */
+function splash(){
+  return new Promise(res => {
+    const sp = $('splash');
+    if (!sp) return res();
+    let done = false;
+    const end = () => { if (done) return; done = true; sp.classList.add('out'); setTimeout(() => { sp.remove(); res(); }, 650); };
+    let started = false;
+    const start = () => { if (started) return; started = true; requestAnimationFrame(() => requestAnimationFrame(() => sp.classList.add('go'))); setTimeout(end, reduce ? 900 : 3900); };
+    Promise.all([...sp.querySelectorAll('img')].map(im => im.decode ? im.decode().catch(() => {}) : 0)).then(start);
+    setTimeout(start, 1500);
+    sp.addEventListener('click', end);
+  });
+}
 (function intro(){
   const el = $('intro'), lg = $('ilogo');
   $('emb2').innerHTML = Array.from({length: reduce ? 0 : 22}, () => `<i style="left:${Math.random() * 100}%;--dx:${(Math.random() - .5) * 80}px;animation-duration:${5 + Math.random() * 6}s;animation-delay:-${Math.random() * 8}s;opacity:${.4 + Math.random() * .6}"></i>`).join('');
-  buildLogo(lg).then(() => requestAnimationFrame(() => requestAnimationFrame(() => { el.classList.add('go'); lg.classList.add('go'); })));
-  const go = () => { el.classList.add('out'); setTimeout(() => el.remove(), 520); };
+  Promise.all([buildLogo(lg), splash()]).then(() => requestAnimationFrame(() => requestAnimationFrame(() => { el.classList.add('go'); lg.classList.add('go'); })));
+  const go = () => { if ($('splash')) return; el.classList.add('out'); setTimeout(() => { el.remove(); maybeTour('scrHome'); }, 560); };
   el.addEventListener('click', go);
   el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') go(); });
 })();

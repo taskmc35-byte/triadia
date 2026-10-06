@@ -3,7 +3,7 @@
      Senza rete si usa la copia salvata, quindi il gioco funziona anche offline.
    - Immagini, font e suoni restano salvati sul telefono e vengono riscaricati tutti, ignorando la cache del browser,
      ogni volta che VERSION cambia (lo script di build la cambia da solo a ogni pubblicazione). */
-const VERSION = 'triadia-1.0.0-1549953d';
+const VERSION = 'triadia-1.0.0-9fec29b3';
 const FILES = [
 "./",
 "index.html",
@@ -69,6 +69,9 @@ const FILES = [
 "img/logo/lantern.webp",
 "img/logo/letters.webp",
 "img/logo/paws.webp",
+"img/nova/emb.webp",
+"img/nova/star.webp",
+"img/nova/word.webp",
 "img/prism-4.webp",
 "img/rig/earth-1-body.webp",
 "img/rig/earth-1-e0.webp",
