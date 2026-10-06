@@ -6,6 +6,13 @@
         ".write": "$code.matches(/^[A-Z0-9]{5}$/)",
         ".validate": "!newData.exists() || newData.hasChildren(['cfg', 'host'])"
       }
+    },
+    "saves": {
+      "$code": {
+        ".read": "$code.matches(/^[A-Z0-9]{10}$/)",
+        ".write": "$code.matches(/^[A-Z0-9]{10}$/)",
+        ".validate": "newData.hasChildren(['t', 'data']) && newData.child('data').isString() && newData.child('data').val().length < 100000"
+      }
     }
   }
 }

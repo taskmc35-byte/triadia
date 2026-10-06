@@ -73,6 +73,10 @@ Il gioco si apre a schermo intero con la sua icona, come un'app.
 - A fine partita c'è **Rivincita**: parte quando l'hanno accettata tutti e due.
 - Se uno dei due esce o perde la connessione, l'altro riceve l'avviso. Su iPhone, se si chiude l'app o si blocca lo schermo a lungo durante una partita, la connessione cade e la partita viene interrotta.
 
+## Salvataggio online
+
+I progressi di ogni giocatore vengono copiati anche su Firebase, sotto un codice personale di 10 caratteri (Impostazioni → Salvataggio online). Su un telefono nuovo basta aprire Impostazioni → "Recupera i progressi da un altro telefono" e inserire quel codice. Se cambi le regole del database, ricorda di incollare sempre l'intero contenuto di `database.rules.json` (contiene sia le stanze del multiplayer sia i salvataggi).
+
 ## Pubblicare un aggiornamento
 
 Sostituisci i file nel repository con quelli nuovi e fai di nuovo Commit e Push. Al prossimo avvio con internet, il telefono scarica la nuova versione da solo. **Non toccare `firebase-config.js`** quando aggiorni, altrimenti perdi la configurazione.

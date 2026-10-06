@@ -618,6 +618,45 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z
 .sl{display:grid;grid-template-columns:110px 1fr 34px;align-items:center;gap:10px;font-weight:800}
 .sl input{accent-color:var(--gold);width:100%}
 .sl b{font-family:var(--f-display);font-weight:400;color:var(--gold);text-align:right}
+.gem.gold{filter:drop-shadow(0 0 4px rgba(255,210,94,.7))}
+.goldc{right:auto;left:64px;color:#ffe7a3}
+.ally-b{display:flex;align-items:center;gap:4px;padding-inline:10px;color:#ffe7a3;animation:allyGlow 1.6s ease-in-out infinite}
+.ally-b .gem{width:18px;height:18px}
+.ally-b:disabled{animation:none;opacity:.55}
+@keyframes allyGlow{50%{filter:drop-shadow(0 0 8px rgba(255,210,94,.9))}}
+.ally{position:absolute;left:0;right:0;top:calc(var(--gm,50%) - 130px);height:260px;z-index:12;pointer-events:none;display:flex;align-items:flex-end}
+.ally .apor{position:absolute;bottom:0;height:230px;width:180px;display:flex;align-items:flex-end;transition:transform .45s cubic-bezier(.2,1.3,.4,1);filter:drop-shadow(0 10px 18px rgba(0,0,0,.6))}
+.ally .apor .rig{height:100%;--fl:3.4s;--hd:3.8s;--dl:0s}
+.ally.l .apor{left:-10px;transform:translateX(-120%) rotate(-8deg)}
+.ally.r .apor{right:-10px;transform:translateX(120%) rotate(8deg)}
+.ally.in .apor{transform:none}
+.ally.out .apor{transition-duration:.35s;transition-timing-function:ease-in}
+.ally.l.out .apor{transform:translateX(-120%)}
+.ally.r.out .apor{transform:translateX(120%)}
+.ally .abub{position:absolute;top:0;max-width:min(230px,62%);background:#fff8e6;color:#2a1a10;border:3px solid var(--ink);border-radius:18px;padding:10px 12px 12px;font-weight:800;font-size:14px;line-height:1.35;box-shadow:0 5px 0 rgba(0,0,0,.35);opacity:0;transform:scale(.6);transition:opacity .25s .25s,transform .35s .25s cubic-bezier(.2,1.5,.4,1)}
+.ally .abub b{display:inline-block;margin-bottom:4px;padding:1px 8px;border-radius:8px;border:2px solid var(--ink);font-family:var(--f-display);font-weight:400;color:var(--ink);font-size:14px}
+.ally .abub span{display:block;min-height:3.9em}
+.ally.l .abub{left:150px;transform-origin:0 100%}
+.ally.r .abub{right:150px;transform-origin:100% 100%}
+.ally.in .abub{opacity:1;transform:none}
+.ally.out .abub{opacity:0;transition-delay:0s}
+.cell.hintc::after,.hand.p .card.hintc .frame{animation:hintPulse 1s ease-in-out infinite}
+.cell.hintc::after{content:"";position:absolute;inset:4%;border-radius:12px;border:3px solid #ffe08a;box-shadow:0 0 18px #ffd25e}
+.hand.p .card.hintc .frame{box-shadow:0 0 0 2px var(--ink),0 0 0 5px #ffe08a,0 0 22px #ffd25e}
+@keyframes hintPulse{50%{opacity:.45}}
+.card.shield .frame{box-shadow:0 0 0 2px var(--ink),0 0 0 5px #9be07a,0 0 16px #6fd04a}
+.card.buff .vals b{color:#b6ff9c}
+.card.poof{animation:poof .4s ease-in forwards}
+@keyframes poof{to{transform:scale(.2) rotate(25deg);opacity:0;filter:blur(4px)}}
+.mi.bonus{background:linear-gradient(135deg,rgba(255,210,94,.16),rgba(255,210,94,.04));border-color:#a8822e}
+.mi.bonus .bar i{background:linear-gradient(90deg,#ffd25e,#ffb347)}
+.sndp h4{margin:2px 0 -4px}
+.cloud{display:grid;gap:8px}
+.clrow{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;background:var(--panel2);border:2px solid var(--line);border-radius:12px;padding:8px 10px}
+.clrow span{font-size:12px;font-weight:800;color:var(--muted)}
+.clrow b{font-family:var(--f-display);font-weight:400;font-size:20px;letter-spacing:.08em;color:var(--gold);text-align:center;user-select:all}
+.clrow .btn{--c:7px;padding:6px 12px 8px;font-size:14px}
+#clInput{text-transform:uppercase;letter-spacing:.2em;font-family:var(--f-display);font-size:22px;text-align:center}
 </style>
 </head>
 <body>
@@ -633,8 +672,9 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z
   <div class="zbox"><small id="zEye"></small><div class="zrule"><i></i><b></b><i></i></div><h2 id="zTitle"></h2><p id="zSub"></p><span class="zt">Tocca per continuare</span></div></div>
 
 <section class="scr" id="scrHome">
+  <span class="gchip gems goldc" id="gGoldC" hidden><span id="gGold">0</span><svg class="gem gold" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 2h10l4 5-9 11L1 7z" fill="#ffd25e" stroke="#170f20" stroke-width="1.6" stroke-linejoin="round"/><path d="M1.5 7h17M7 2.3l3 4.7 3-4.7M10 7v10" stroke="#fff3c4" stroke-width="1.1" fill="none"/></svg></span>
   <span class="gchip gems"><span id="gHome">0</span><svg class="gem" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 2h10l4 5-9 11L1 7z" fill="#5fd8ff" stroke="#170f20" stroke-width="1.6" stroke-linejoin="round"/><path d="M1.5 7h17M7 2.3l3 4.7 3-4.7M10 7v10" stroke="#d6f8ff" stroke-width="1" fill="none"/></svg></span>
-  <button class="gchip sndb" id="mSnd" aria-label="Audio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg></button>
+  <button class="gchip sndb" id="mSnd" aria-label="Impostazioni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.8 1.8M16.7 16.7l1.8 1.8M5.5 18.5l1.8-1.8M16.7 7.3l1.8-1.8"/><circle cx="12" cy="12" r="6.3"/></svg></button>
   <div class="homein">
     <h1 class="alogo still" id="hlogo" aria-label="Triadia"></h1>
     <p class="tag" style="margin-top:-6px">Sfida gli spiriti. Conquista le loro carte.</p>
@@ -688,10 +728,12 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z
     <div id="ambient"></div>
     <div class="board" id="board"></div>
   </div>
+  <div class="ally" id="ally" hidden><div class="apor" id="allyPor"></div><div class="abub"><b id="allyName"></b><span id="allyText"></span></div></div>
   <div class="fade t"></div>
   <div class="fade b"></div>
 
   <div class="ctrl">
+    <button class="btn ally-b" id="bAlly" aria-label="Chiama un alleato" hidden><svg class="gem gold" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 2h10l4 5-9 11L1 7z" fill="#ffd25e" stroke="#170f20" stroke-width="1.6" stroke-linejoin="round"/><path d="M1.5 7h17M7 2.3l3 4.7 3-4.7M10 7v10" stroke="#fff3c4" stroke-width="1.1" fill="none"/></svg><span id="bAllyN">0</span></button>
     <button class="btn q" id="bHelp" aria-label="Regole">?</button>
     <button class="btn" id="bExit">Esci</button>
   </div>
@@ -782,11 +824,22 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z
 
 <div class="sheet" id="sndSheet" hidden>
   <div class="panel sndp">
-    <h3>Audio</h3>
+    <h3>Impostazioni</h3>
+    <h4>Audio</h4>
     <label class="sl"><span>Musica</span><input type="range" min="0" max="100" id="vMusic"><b id="vMusicN"></b></label>
     <label class="sl"><span>Effetti</span><input type="range" min="0" max="100" id="vSfx"><b id="vSfxN"></b></label>
     <label class="sl"><span>Voci dei Triadi</span><input type="range" min="0" max="100" id="vVoice"><b id="vVoiceN"></b></label>
-    <p class="hnote">Tutte le musiche e i suoni sono originali e generati dal gioco. Su iPhone, con l'interruttore silenzioso attivo, il gioco resta muto.</p>
+    <h4>Salvataggio online</h4>
+    <div class="cloud">
+      <p class="hnote" id="clStat">I tuoi progressi vengono salvati anche online.</p>
+      <div class="clrow" id="clMine"><span>Il tuo codice</span><b id="clCode">-----</b><button class="btn" id="clCopy" type="button">Copia</button></div>
+      <button class="btn" id="clUse" type="button">Recupera i progressi da un altro telefono</button>
+      <div id="clIn" hidden>
+        <label class="fld"><span>Codice dell'altro telefono</span><input id="clInput" maxlength="11" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXXX-XXXXX"></label>
+        <p class="hnote">I progressi di questo telefono verranno sostituiti da quelli del codice.</p>
+        <div class="row"><button class="btn" id="clCancel" type="button" style="flex:1">Annulla</button><button class="btn gold" id="clLoad" type="button" style="flex:2">Recupera</button></div>
+      </div>
+    </div>
     <button class="btn gold" id="sndClose">Fatto</button>
   </div>
 </div>
@@ -811,6 +864,7 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z
       <li><b>Reazione a catena</b>: le carte prese con Specchio o Armonia attaccano a loro volta i propri vicini.</li>
       <li><b>Ciclo degli elementi</b>: quando attacchi una carta dell'elemento che il tuo batte, prendi +1 su quel lato.<span class="cyc" id="cycRow"></span></li>
       <li><b>Affinità</b>: una carta sul simbolo del suo elemento prende +1 su tutti i lati, altrimenti −1.</li>
+      <li><b>Alleati</b>: completando le 3 missioni del giorno ottieni una <b>Gemma dorata</b>. In partita contro il computer toccala in alto: un alleato a caso tra quelli che hai incontrato arriva ad aiutarti (una volta per partita).</li>
       <li><b>Distorsione</b> (solo nel Piano Distorto): dopo ogni mossa i simboli sulle caselle libere si spostano e a volte cambiano elemento.</li>
     </ul>
     <p class="hnote">Puoi attivare o disattivare le regole in Battaglia rapida. Nella Storia le introduce Lanternino, capitolo dopo capitolo.</p>
@@ -1127,25 +1181,26 @@ function resolve(board, idx, rules, elems){
   const me = b[idx].owner, ev = [], special = [];
   const N = nbs(idx).filter(([, j]) => b[j]);
   const flip = js => js.forEach(j => b[j].owner = me);
+  const prot = j => !!(rules.shield && rules.shield.has(b[j].card.uid));
   if (rules.same){
     const m = N.filter(([d, j]) => val(b, idx, d, elems) === val(b, j, (d + 2) % 4, elems));
-    if (m.length >= 2){ const f = m.map(x => x[1]).filter(j => b[j].owner !== me); if (f.length){ flip(f); ev.push({t:'same', js:f}); special.push(...f); } }
+    if (m.length >= 2){ const f = m.map(x => x[1]).filter(j => b[j].owner !== me && !prot(j)); if (f.length){ flip(f); ev.push({t:'same', js:f}); special.push(...f); } }
   }
   if (rules.plus){
     const sums = {};
     N.forEach(([d, j]) => { const s = val(b, idx, d, elems) + val(b, j, (d + 2) % 4, elems); (sums[s] = sums[s] || []).push(j); });
     const f = [];
-    Object.values(sums).forEach(js => { if (js.length >= 2) js.forEach(j => { if (b[j].owner !== me && !f.includes(j)) f.push(j); }); });
+    Object.values(sums).forEach(js => { if (js.length >= 2) js.forEach(j => { if (b[j].owner !== me && !prot(j) && !f.includes(j)) f.push(j); }); });
     if (f.length){ flip(f); ev.push({t:'plus', js:f}); special.push(...f); }
   }
   const atk = b[idx].card;
-  const basic = N.filter(([d, j]) => b[j].owner !== me && val(b, idx, d, elems) + adv(atk, b[j].card, rules) > val(b, j, (d + 2) % 4, elems)).map(x => x[1]);
+  const basic = N.filter(([d, j]) => b[j].owner !== me && !prot(j) && val(b, idx, d, elems) + adv(atk, b[j].card, rules) > val(b, j, (d + 2) % 4, elems)).map(x => x[1]);
   const byAdv = basic.some(j => { const d = N.find(x => x[1] === j)[0]; return val(b, idx, d, elems) <= val(b, j, (d + 2) % 4, elems); });
   if (basic.length){ flip(basic); ev.push({t:'basic', js:basic, adv:byAdv}); }
   let wave = special;
   while (wave.length){
     const next = [];
-    wave.forEach(k => nbs(k).forEach(([d, j]) => { if (b[j] && b[j].owner !== me && val(b, k, d, elems) + adv(b[k].card, b[j].card, rules) > val(b, j, (d + 2) % 4, elems) && !next.includes(j)) next.push(j); }));
+    wave.forEach(k => nbs(k).forEach(([d, j]) => { if (b[j] && b[j].owner !== me && !prot(j) && val(b, k, d, elems) + adv(b[k].card, b[j].card, rules) > val(b, j, (d + 2) % 4, elems) && !next.includes(j)) next.push(j); }));
     if (next.length){ flip(next); ev.push({t:'combo', js:next}); }
     wave = next;
   }
@@ -1200,11 +1255,11 @@ const CH = [
    intro:[['X',"Ops! Questa bella carta era nella tua borsa? Che coincidenza: adesso è nella mia."],['L',"Restituiscila subito, ladruncola!"],['X',"Mmh… facciamo così: una partita. Se vinci, ti ridarò tutto. Se vinco io, mi terrò anche la lanterna parlante."],['L',"EHI! Io non sono in vendita! …Quanto offre, per curiosità?"],['L',"In città vale la regola Specchio: se due lati della tua carta sono uguali ai lati che toccano, le prendi entrambe. Rubare legalmente, insomma. La volpe approva."]],
    win:[['X',"Tsk. Mani veloci quanto le mie. Tieni, ecco la tua roba."],['X',"E già che ci sono, vengo con te. Dicono che nella Torre ci siano tesori molto interessanti da… ammirare."]],
    lose:"Grazie della partita! La lanterna però te la lascio: parla troppo."},
-  {id:'light-2', hand:['light-1','shadow-1','earth-2','wind-1'],
+  {id:'light-2', hand:['light-1','shadow-1','earth-1','wind-1'],
    intro:[['X',"Alt! La campana del mercato ha suonato: c'è un ladro in piazza!"],['L',"Il ladro era la volpe, e l'abbiamo già sistemata! Più o meno. Adesso è nel nostro mazzo. Lunga storia."],['X',"E allora perché la volpe è nel vostro mazzo?! Regolamento Solare, articolo sette: nel dubbio, si gioca."]],
    win:[['X',"Articolo otto: chi vince ha ragione. Vi chiedo scusa."],['X',"Il mio maestro, il Paladino dell'Alba, sorveglia la porta della città. Da quando il sole si è indebolito non fa passare nessuno."]],
    lose:"Il Regolamento Solare non sbaglia mai! Studiatelo e tornate."},
-  {id:'light-3', boss:true, hand:['light-2','wind-2','earth-2','fire-1'],
+  {id:'light-3', boss:true, hand:['light-1','wind-2','earth-2','fire-1'],
    intro:[['X',"Fermi! Questa porta resterà chiusa finché il sole non tornerà a splendere."],['L',"Ma è proprio per questo che andiamo alla Torre! Siamo i buoni. Abbiamo perfino una lanterna, più buoni di così…"],['X',"Molti l'hanno detto. Nessuno è tornato. Se vuoi passare, dimostrami che la tua luce non si spegne al primo colpo."]],
    win:[['X',"Per l'Alba! Che partita!"],['X',"Hai combattuto con onore, Custode. Apro la porta… e vengo con te. Un paladino senza sole è solo un tizio in armatura."]],
    lose:"Rialzati, Custode. La luce si riaccende sempre."}
@@ -1232,7 +1287,7 @@ const CH = [
    intro:[['X',"Fermo."],['L',"Ciao! Lui è il Custode, io sono Lanternino, la mia giornata va bene, grazie per averlo chiesto, e…"],['X',"Troppe parole. La Regina non riceve. Carte."]],
    win:[['X',"…Forte."],['X',"La Regina ha perso la sua fiamma. Gliel'ha presa Eclissi. Se riuscirai a riaccenderla, ti servirò."]],
    lose:"Debole. Di nuovo."},
-  {id:'fire-4', boss:true, hand:['fire-3','fire-2','light-3','earth-3'],
+  {id:'fire-4', boss:true, hand:['fire-3','fire-2','light-2','earth-2'],
    intro:[['X',"Che sfacciataggine! Entrare nella MIA forgia senza un tappeto rosso!"],['L',"Ehm, maestà… il tappeto si è sciolto. Come tutto il resto, qui dentro. Compresa la mia pazienza."],['X',"Ovvio! Tutto si scioglie davanti a me. O meglio, si scioglieva: da quando Eclissi mi ha rubato la fiamma, brucio a metà."],['X',"Vediamo se tu hai abbastanza fuoco per tutti e due!"]],
    win:[['X',"Ah! Lo sento… sento di nuovo il calore!"],['X',"Mi hai riacceso, Custode. Una regina paga sempre i suoi debiti: le mie ali sono tue. Andiamo a riprenderci il sole."]],
    lose:"Cenere! Ma dalla cenere si rinasce. Lo so bene, io."}
@@ -1242,7 +1297,7 @@ const CH = [
    intro:[['X',"Il vento sussurra. Tre viandanti sul sentiero. Uno parla troppo."],['L',"…Sta parlando di me? Sta parlando di me."],['X',"La vetta è chiusa. Solo chi danza col vento può salire fin lassù."],['L',"Quassù vale la regola Affinità: una carta sul simbolo del suo elemento prende +1 su ogni lato, sugli altri simboli −1. In pratica anche le caselle hanno un caratteraccio."]],
    win:[['X',"Foglia sul ruscello. Il tuo gioco scorre bene. Seguo la corrente."]],
    lose:"Neve sulla pietra. Non sei ancora pronto. Torna a primavera."},
-  {id:'earth-4', hand:['earth-3','earth-2','wind-3','water-2'],
+  {id:'earth-4', hand:['earth-1','earth-2','wind-3','water-2'],
    intro:[['X',"Mmmh… piccoli passi sul mio naso. Che solletico."],['L',"Aspetta… siamo sulla sua faccia?! Custode, togliti le scarpe. Per educazione."],['X',"Dormo da diecimila inverni. Ma Re Tempesta ulula sulla mia cima e non riesco a riposare."],['X',"Giochiamo, piccolo. Se vincerai, farai tacere quel vento chiassoso per me."]],
    win:[['X',"Ohhh… ottima partita. Come una pioggia d'estate."],['X',"Porta con te un pezzo della montagna, Custode. E fai silenzio, lassù."]],
    lose:"Mmmh… riprova pure. Io ho tutto il tempo del mondo."},
@@ -1260,14 +1315,14 @@ const CH = [
    intro:[['X',"Sei arrivato fin quassù… e hai riunito spiriti che non si parlavano da secoli."],['L',"Serafina! Ci serve il tuo aiuto contro Eclissi. E un autografo, se avanza tempo."],['X',"Eclissi è la mia ombra, Custode. Non posso combatterla. Ma posso vedere se tu sei pronto a farlo."],['X',"Mostrami la luce che hai raccolto lungo il cammino."]],
    win:[['X',"Sì… è luce vera. Calda, imperfetta, viva."],['X',"Va' alla Torre. E quando sarai davanti a lei, ricordale che anche la notte più buia ha le sue stelle."]],
    lose:"La luce ha bisogno di tempo per crescere. Riposa, piccolo Custode."},
-  {id:'shadow-4', boss:true, hand:['shadow-3','water-3','fire-3','light-3'],
+  {id:'shadow-4', boss:true, diff:'smart', hand:['shadow-3','water-3','fire-3','light-2'],
    intro:[['X',"Così sei tu il Custode di cui parlano tutti."],['X',"Ho spento il sole perché smettesse di fare male. Senza luce non c'è ombra. E senza ombra… non ci sono io."],['L',"Ma tu non devi sparire! Anche la notte serve: è lì che si vedono le stelle. E le lanterne, modestamente."],['X',"Belle parole, lanterna. Vediamo se il tuo Custode sa giocarle."]],
    win:[['X',"…Le stelle."],['X',"Le avevo dimenticate. Tutti questi spiriti… insieme, nello stesso mazzo."],['X',"Forse c'è posto anche per me, Custode."],['L',"C'è sempre posto! Bentornata, Eclissi… e buongiorno, Triadia! Finalmente posso riposarmi un po'. Scherzo. Più o meno."]],
    lose:"Torna nell'oscurità, Custode. Io ti aspetterò."}
  ]}
 ];
 CH.push({n:'Il Piano Distorto', a:'distorto', extra:true, rules:{same:true, plus:true, elem:true, cycle:true, distort:true, open:true}, nodes:[
-  {id:'prism-4', boss:true, diff:'hard', hand:['fire-4','water-4','wind-4','shadow-4'],
+  {id:'prism-4', boss:true, diff:'smart', hand:['fire-4','water-3','wind-3','shadow-4'],
    intro:[['X',"…Fuoco. Acqua. Terra. Vento. Luce. Ombra. Tutti. Nessuno."],
     ['L',"Ok, questo è inquietante. Chi sei? E perché parli come una lista della spesa?"],
     ['X',"Io sono Omnia. Prima che il mondo avesse un nome, io ero tutto. Poi mi sono divisa in sei, e dai miei frammenti siete nati voi."],
@@ -1350,7 +1405,8 @@ const SAVE_KEY = 'triadia-save1';
 const START = ['fire-1','water-1','earth-1','wind-1','light-1','shadow-1'];
 let SV = {owned:START.slice(), done:[], intro:false, gems:0, chroma:[], skin:null, daily:null};
 try { const s = JSON.parse(localStorage.getItem(SAVE_KEY)); if (s && Array.isArray(s.owned)) SV = Object.assign(SV, s); } catch(e){}
-function save(){ try { localStorage.setItem(SAVE_KEY, JSON.stringify(SV)); } catch(e){} }
+const LOCAL_T0 = SV._t || 0;
+function save(){ SV._t = Date.now(); try { localStorage.setItem(SAVE_KEY, JSON.stringify(SV)); } catch(e){} if (typeof cloudPush === 'function') cloudPush(); }
 /* chromatic variants: 'a' and 'b' on sale from the start, 'p' (Prismatica) after the story */
 SV.chroma = (SV.chroma || []).map(x => x.includes(':') ? x : x + ':a');
 if (!SV.skin){ SV.skin = {}; SV.chroma.forEach(k => { const id = k.split(':')[0]; if (!(SV.chromaOff || []).includes(id)) SV.skin[id] = 'a'; }); }
@@ -1373,8 +1429,9 @@ const vPrice = (c, v) => v === 'p' ? PRICE_P[c.r] : PRICE[c.r];
 const PRICE = {1:50, 2:100, 3:200, 4:400};
 const GEM_WIN = {first:20, firstBoss:40, replay:8, replayBoss:15};
 const GEM = document.getElementById('gemTpl').innerHTML;
+const GOLDG = '<svg class="gem gold" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 2h10l4 5-9 11L1 7z" fill="#ffd25e" stroke="#170f20" stroke-width="1.6" stroke-linejoin="round"/><path d="M1.5 7h17M7 2.3l3 4.7 3-4.7M10 7v10" stroke="#fff3c4" stroke-width="1.1" fill="none"/></svg>';
 function addGems(n){ SV.gems += n; save(); refreshGems(); }
-function refreshGems(){ ['gHome','gShop'].forEach(id => $(id).textContent = SV.gems); }
+function refreshGems(){ ['gHome','gShop'].forEach(id => $(id).textContent = SV.gems); const g = SV.gold || 0; $('gGold').textContent = g; $('gGoldC').hidden = !g; }
 
 /* ---------- Daily missions ---------- */
 const MPOOL = [
@@ -1405,7 +1462,7 @@ function track(k, n = 1){
   SV.daily.list.forEach(m => { const M = MPOOL[m.i]; if (M.k === k && m.prog < M.goal){ m.prog = Math.min(M.goal, m.prog + n); changed = true; } });
   if (changed) save();
 }
-const claimable = () => { ensureDaily(); return SV.daily.list.filter(m => !m.claimed && m.prog >= MPOOL[m.i].goal).length; };
+const claimable = () => { ensureDaily(); return SV.daily.list.filter(m => !m.claimed && m.prog >= MPOOL[m.i].goal).length + (!SV.daily.bonus && SV.daily.list.every(m => m.claimed) ? 1 : 0); };
 function renderMissions(){
   ensureDaily();
   $('misList').innerHTML = SV.daily.list.map((m, j) => {
@@ -1413,6 +1470,10 @@ function renderMissions(){
     return `<div class="mi${m.claimed ? ' claimed' : ''}"><b>${M.t}</b><span class="bar"><i style="width:${m.prog / M.goal * 100}%"></i></span><span class="pr">${m.prog}/${M.goal}</span>
       <button class="btn${ok && !m.claimed ? ' gold' : ''}" data-j="${j}" ${ok && !m.claimed ? '' : 'disabled'}>${m.claimed ? 'Riscattata' : `+${M.g} ${GEM}`}</button></div>`;
   }).join('');
+  const nDone = SV.daily.list.filter(m => m.claimed).length, bOk = nDone >= 3 && !SV.daily.bonus;
+  $('misList').insertAdjacentHTML('beforeend', `<div class="mi bonus${SV.daily.bonus ? ' claimed' : ''}"><b>Completa le missioni di oggi</b><span class="bar"><i style="width:${nDone / 3 * 100}%"></i></span><span class="pr">${nDone}/3 · premio: una Gemma dorata per chiamare un alleato in partita</span>
+    <button class="btn${bOk ? ' gold' : ''}" id="misBonus" ${bOk ? '' : 'disabled'}>${SV.daily.bonus ? 'Riscattata' : `+1 ${GOLDG}`}</button></div>`);
+  $('misBonus').onclick = () => { if (SV.daily.bonus || nDone < 3) return; SV.daily.bonus = true; SV.gold = (SV.gold || 0) + 1; save(); AUD.sfx('reward'); renderMissions(); renderHome(); toast(`+1 Gemma dorata ${GOLDG}`); };
   $('misList').querySelectorAll('button[data-j]').forEach(b => b.onclick = () => {
     const m = SV.daily.list[+b.dataset.j]; if (m.claimed) return;
     m.claimed = true; AUD.sfx('gem'); addGems(MPOOL[m.i].g); renderMissions(); renderHome(); toast(`+${MPOOL[m.i].g} gemme`);
@@ -1523,7 +1584,7 @@ function randElems(rules){
 function newGame(pre){
   show('game');
   applyArena(CFG.arena);
-  const p = pre ? pre.p : playerHand();
+  const p = pre ? pre.p : CFG.mode === 'story' ? storyHand() : playerHand();
   const hands = {p, a:pre ? pre.a : CFG.opp ? shuffle(CFG.opp.map(id => mk(id))) : quickOpp(p)};
   const elems = pre ? pre.elems : randElems(CFG.rules);
   S = {board:Array(9).fill(null), elems, hands, turn:pre ? pre.turn : Math.random() < .5 ? 'p' : 'a', sel:null, busy:false, over:false};
@@ -1533,6 +1594,7 @@ function newGame(pre){
   renderBoard(); renderHands();
   sayA('');
   if (S.turn === 'p') sayP('<b>Inizi tu</b>'); else sayP('');
+  S.allyUsed = false; S.hint = 0; delete CFG.rules.shield; allyBtn();
   if (S.turn === 'a') oppTurn();
 }
 function oppTurn(){ if (CFG.mode === 'online'){ sayA('sta pensando…'); pumpOnline(); } else aiTurn(); }
@@ -1543,6 +1605,20 @@ function startQuick(){
   newGame();
 }
 const nodeArena = N => N.a || CH[N.ci].a;
+/* difficulty eases after defeats: one step after the first loss, two after the third */
+const DIFFS = ['easy', 'smart', 'normal', 'hard'];
+function storyDiff(N){
+  const f = (SV.fails || {})[N.id] || 0, base = DIFFS.indexOf(N.diff || 'normal');
+  return DIFFS[Math.max(0, base - (f >= 3 ? 2 : f >= 1 ? 1 : 0))];
+}
+/* story hand: your strongest cards (max one legendary), chosen among the best six */
+function storyHand(){
+  const pw = c => c.s[0] + c.s[1] + c.s[2] + c.s[3];
+  const cs = SV.owned.map(id => CARD_BY[id]).sort((a, b) => pw(b) - pw(a) || Math.random() - .5), out = [];
+  let L = 0;
+  for (const c of cs){ if (c.r === 4){ if (L) continue; L++; } out.push(c); if (out.length === 6) break; }
+  return shuffle(out).slice(0, 5).map(c => mk(c.id, useChroma(c.id)));
+}
 const chapLabel = N => `${isExtra(N) ? 'Livello extra' : 'Capitolo ' + (N.ci + 1)} · ${ARENAS[nodeArena(N)].n}`;
 const storyDone = () => NODES.every(n => isExtra(n) || SV.done.includes(n.id));
 async function startNode(N, intro){
@@ -1557,7 +1633,7 @@ async function startNode(N, intro){
     if (tk && CH[N.ci].nodes[0] === N && !SV.tuts[tk]) await runTut(tk);
     await dialog(N.intro, {x:N.id, arena:nodeArena(N), chap:chapLabel(N)});
   }
-  CFG = {mode:'story', node:N, arena:nodeArena(N), rules:{...CH[N.ci].rules}, diff:N.diff || (N.boss ? 'hard' : 'normal'), opp:[N.id, ...N.hand], oppName:CARD_BY[N.id].n};
+  CFG = {mode:'story', node:N, arena:nodeArena(N), rules:{...CH[N.ci].rules}, diff:storyDiff(N), opp:[N.id, ...N.hand], oppName:CARD_BY[N.id].n};
   newGame();
 }
 
@@ -1676,7 +1752,7 @@ function runTut(key){
     $('over').hidden = true; $('whoA').textContent = 'Allenamento';
     $('handP').dataset.key = ''; $('handA').dataset.key = '';
     fitCoach(T);
-    renderBoard(); renderHands(); sayA(''); sayP('');
+    renderBoard(); renderHands(); sayA(''); sayP(''); allyBtn();
     tutStep();
   });
 }
@@ -1783,7 +1859,7 @@ function cardInner(c, cell){
 <span class="vals${cls}"><b class="n">${fmt(v[0])}</b><b class="w">${fmt(v[3])}</b><b class="e">${fmt(v[1])}</b><b class="s">${fmt(v[2])}</b></span>
 <span class="elb" style="--ec:${e.c};--ecd:${e.d}">${elIcon(c.el)}</span>`;
 }
-const cardClass = (c, owner) => `card ${owner} el-${c.el} r${c.r}${c.chroma ? ' chroma ch-' + c.chroma : ''}`;
+const cardClass = (c, owner) => `card ${owner} el-${c.el} r${c.r}${c.chroma ? ' chroma ch-' + c.chroma : ''}${c.buff ? ' buff' : ''}`;
 const label = c => `${c.n}, ${EL[c.el].n}, ${RAR[c.r]}: su ${fmt(c.s[0])}, destra ${fmt(c.s[1])}, giù ${fmt(c.s[2])}, sinistra ${fmt(c.s[3])}`;
 const BACK = `<span class="frame"></span><svg viewBox="0 0 60 60" aria-hidden="true"><path d="M30 8L52 46H8Z" fill="none" stroke="#f5b942" stroke-width="3.5" stroke-linejoin="round"/><circle cx="30" cy="34" r="6" fill="#ff8a3d"/></svg>`;
 
@@ -1808,7 +1884,7 @@ function renderHands(){
   [...hp.querySelectorAll('button.card,button[data-uid]')].forEach(b => {
     const i = S.hands.p.findIndex(x => x.uid === b.dataset.uid), c = S.hands.p[i];
     if (!c) return;
-    b.className = cardClass(c, 'p') + (S.sel === i ? ' sel' : '') + (tw && c.uid === tw.uid && S.sel !== i ? ' tutpick' : '') + (tw && c.uid !== tw.uid ? ' tutoff' : '');
+    b.className = cardClass(c, 'p') + (S.hintUid === c.uid ? ' hintc' : '') + (S.sel === i ? ' sel' : '') + (tw && c.uid === tw.uid && S.sel !== i ? ' tutpick' : '') + (tw && c.uid !== tw.uid ? ' tutoff' : '');
     b.disabled = S.turn !== 'p' || S.busy || S.over || !!(tw && c.uid !== tw.uid);
   });
   const keyA = S.hands.a.map(c => c.uid).join('|') + (CFG.rules.open ? 'o' : 'c');
@@ -1949,6 +2025,7 @@ async function play(who, h, i){
   const card = S.hands[who].splice(h, 1)[0];
   S.board[i] = {card, owner:who};
   if (who === 'p' && CFG.mode === 'online') sendMove(card.uid, i);
+  if (who === 'p' && S.hint){ S.hint--; clearHint(); }
   if (who === 'a' && CFG.mode === 'online') sayA('');
   if (who === 'p') sayP('');
   renderHands(); markOpen(); renderCell(i, 'drop'); AUD.sfx('place');
@@ -1974,9 +2051,12 @@ async function play(who, h, i){
   if (S.board.every(Boolean)) return endGame();
   if (CFG.rules.distort && CFG.mode !== 'tut'){ distort(); await wait(520); if (S !== me) return; }
   if (CFG.mode === 'tut'){ S.busy = true; renderHands(); markOpen(); return tutAfter(who); }
+  if (who === 'a' && CFG.rules.shield){ delete CFG.rules.shield; [...$('board').querySelectorAll('.card.shield')].forEach(c => c.classList.remove('shield')); }
   S.turn = who === 'p' ? 'a' : 'p'; S.busy = false;
+  if (!S.hands[S.turn].length) S.turn = who;
   renderHands(); markOpen();
-  if (S.turn === 'a') oppTurn(); else { sayP('<b>Tocca a te</b>'); AUD.sfx('turn'); }
+  if (S.turn === 'a') oppTurn(); else { sayP('<b>Tocca a te</b>'); AUD.sfx('turn'); allyHint(); }
+  allyBtn();
 }
 async function aiTurn(){
   const me = S;
@@ -1986,6 +2066,7 @@ async function aiTurn(){
   const moves = bestMoves(S.board, S.hands.a, 'a', 'p', S.hands.p, CFG.rules, S.elems, CFG.diff === 'hard');
   let m = moves[0];
   if (CFG.diff === 'easy') m = moves[Math.floor(Math.random() * Math.min(moves.length, Math.max(3, moves.length * .6)))];
+  else if (CFG.diff === 'smart' && Math.random() < .25) m = moves[Math.min(moves.length - 1, 1 + Math.floor(Math.random() * 2))];
   sayA('');
   play('a', m.h, m.c);
 }
@@ -2009,6 +2090,7 @@ function endGame(){
       const N = CFG.node, name = CARD_BY[N.id].n;
       if (res === 'win'){
         await dialog(N.win, {x:N.id, arena:CFG.arena, chap:chapLabel(N)});
+        if (SV.fails) delete SV.fails[N.id];
         const first = !SV.done.includes(N.id);
         const g = first ? (N.boss ? GEM_WIN.firstBoss : GEM_WIN.first) : (N.boss ? GEM_WIN.replayBoss : GEM_WIN.replay);
         addGems(g);
@@ -2037,7 +2119,9 @@ function endGame(){
         else if (isExtra(N)) toast('Omnia si è unita al tuo mazzo!');
         else if (storyDone() && !SV.done.includes('prism-4')) toast('Livello extra e carte Prismatiche sbloccati!');
       } else {
-        setOver(res === 'lose' ? 'Sconfitta' : 'Pareggio', `<b>${name}:</b> «${N.lose}»`, 'Riprova', () => startNode(N, false), 'Mappa', () => openPath());
+        SV.fails = SV.fails || {}; const nf = SV.fails[N.id] = (SV.fails[N.id] || 0) + 1; save();
+        const help = nf === 1 || nf === 3 ? `<br><small><b>Lanternino:</b> «${nf === 1 ? 'Coraggio, Custode: al prossimo tentativo l\u2019avversario sarà un po\u2019 più distratto.' : 'Ok, ti do una mano io: adesso l\u2019avversario gioca molto più alla buona.'}»</small>` : '';
+        setOver(res === 'lose' ? 'Sconfitta' : 'Pareggio', `<b>${name}:</b> «${N.lose}»${help}`, 'Riprova', () => startNode(N, false), 'Mappa', () => openPath());
       }
     } else if (CFG.mode === 'online'){
       if (ON.left) return;
@@ -2219,12 +2303,13 @@ function openCol(){
   $('colGrid').innerHTML = ORDER.concat(SV.owned.includes('prism-4') ? ['prism'] : []).map(el => {
     const list = CARDS.filter(c => c.el === el), e = EL[el], n = list.filter(c => SV.owned.includes(c.id)).length;
     return `<div class="elrow${el === 'prism' ? ' prow' : ''}"><h3><i style="--ec:${e.c}">${elIcon(el)}</i>${e.n}<small>${n}/${list.length}</small></h3><div class="cgrid">${list.map(c => cardTile(c, SV.owned.includes(c.id), useChroma(c.id), 'button')).join('')}</div></div>`;
-  }).join('') + (window.TRIADIA_APP && !/[?&]dev\b/.test(location.search) ? '' : `<div class="tools"><p>Strumenti di test del prototipo</p><button class="btn" id="tAll">Sblocca tutte le carte</button><button class="btn" id="tStory">Completa la storia</button><button class="btn" id="tGems">+500 gemme</button><button class="btn" id="tReset">Azzera progressi</button></div>`);
+  }).join('') + (window.TRIADIA_APP && !/[?&]dev\b/.test(location.search) ? '' : `<div class="tools"><p>Strumenti di test del prototipo</p><button class="btn" id="tAll">Sblocca tutte le carte</button><button class="btn" id="tStory">Completa la storia</button><button class="btn" id="tGems">+500 gemme</button><button class="btn" id="tGold">+10 gemme dorate</button><button class="btn" id="tReset">Azzera progressi</button></div>`);
   $('colGrid').querySelectorAll('button.card').forEach(b => b.onclick = () => openCard(b.dataset.id));
   if (!$('tAll')){ show('scrCol'); return; }
   $('tAll').onclick = () => { SV.owned = CARDS.map(c => c.id); save(); openCol(); toast('Tutte le carte sbloccate'); };
   $('tStory').onclick = () => { SV.done = NODES.filter(n => !isExtra(n)).map(n => n.id); SV.owned = [...new Set(SV.owned.concat(CARDS.filter(c => c.el !== 'prism').map(c => c.id)))]; SV.intro = true; save(); openCol(); toast('Storia completata: livello extra e Prismatiche sbloccati'); };
   $('tGems').onclick = () => { addGems(500); toast('+500 gemme'); };
+  $('tGold').onclick = () => { SV.gold = (SV.gold || 0) + 10; save(); refreshGems(); toast('+10 gemme dorate ' + GOLDG); };
   $('tReset').onclick = e => {
     const b = e.currentTarget;
     if (!b.dataset.c){ b.dataset.c = 1; b.textContent = 'Tocca ancora per confermare'; return; }
@@ -2288,6 +2373,86 @@ function openShop(keep){
   show('scrShop');
 }
 
+/* ---------- Allies: spend a Gemma dorata, a random ally you have met jumps in to help (once per match) ---------- */
+const ALLIES = {
+  'light-1':{p:'Ti consiglio le prossime due mosse', lines:["Fidati della lanterna: la carta che brilla va nella casella che brilla. Poi ti dico anche la prossima.", "Illumino la strada, tu cammini. Segui la luce per due mosse!", "Ho fatto due conti. Sì, anche le lanterne sanno contare. Segui i bagliori!"]},
+  'shadow-2':{p:'Fa sparire una carta avversaria dalla plancia', lines:["Ops! Questa carta era sul tavolo? Che coincidenza: adesso non c'è più.", "Un attimo di distrazione e… sparita! Non ringraziarmi, ringrazia le mie zampe.", "Prendo questa in prestito. Per sempre."]},
+  'earth-3':{p:'Le tue carte sul campo non possono essere conquistate al prossimo turno', lines:["IO… PROTEGGO. NESSUNO… TOCCA… LE TUE CARTE.", "SCUDO… DI PIETRA. PER UN TURNO… SIETE AL SICURO.", "DIETRO… DI ME."]},
+  'water-3':{p:'Scambia la tua carta più debole con la più forte dell\u2019avversario', lines:["La marea prende e la marea restituisce. Questa volta restituisce a te.", "Le onde hanno scambiato le carte. Nessuno se n'è accorto, tranne noi.", "Lascia fare alla corrente, Custode."]},
+  'fire-4':{p:'+1 a tutti i valori delle carte che hai in mano', lines:["Che la mia fiamma scaldi le tue carte! Tutte, anche quelle bruttine.", "Un po' di fuoco reale non ha mai fatto male a nessuno. Beh, quasi a nessuno.", "Ardete, carte mie! Ehm, del Custode."]},
+  'wind-4':{p:'Conquista la carta avversaria più debole sul campo', lines:["AH-AH! Una folata e quella carta cambia bandiera!", "Il vento soffia dalla tua parte, Custode!", "RAFFICA! Tienti forte!"]}
+};
+const allyOk = id => id === 'light-1' || SV.owned.includes(id);
+const pw = c => c.s[0] + c.s[1] + c.s[2] + c.s[3];
+function allyUsable(id){
+  const oppCells = S.board.map((x, i) => x && x.owner === 'a' ? i : -1).filter(i => i >= 0);
+  switch (id){
+    case 'light-1': case 'fire-4': return S.hands.p.length > 0;
+    case 'shadow-2': return oppCells.length > 0 || S.hands.a.length > 0;
+    case 'earth-3': return S.board.some(x => x && x.owner === 'p') && S.hands.a.length > 0;
+    case 'water-3': return S.hands.p.length > 0 && S.hands.a.length > 0;
+    case 'wind-4': return oppCells.length > 0;
+  }
+  return false;
+}
+function allyBtn(){
+  const b = $('bAlly'), g = SV.gold || 0, ok = S && (CFG.mode === 'story' || CFG.mode === 'quick');
+  b.hidden = !ok || !g || S.allyUsed; $('bAllyN').textContent = g;
+  b.disabled = !S || S.turn !== 'p' || S.busy || S.over;
+}
+function clearHint(){ if (S) S.hintUid = null; document.querySelectorAll('.hintc').forEach(e => e.classList.remove('hintc')); }
+function allyHint(){
+  clearHint();
+  if (!S || !S.hint || S.turn !== 'p' || S.over) return;
+  const m = bestMoves(S.board, S.hands.p, 'p', 'a', S.hands.a, CFG.rules, S.elems, true)[0];
+  if (!m) return;
+  const uid = S.hintUid = S.hands.p[m.h].uid;
+  const card = [...$('handP').children].find(b => b.dataset.uid === uid);
+  if (card) card.classList.add('hintc');
+  $('board').children[m.c].classList.add('hintc');
+}
+async function allyGo(){
+  if (!S || S.turn !== 'p' || S.busy || S.over || S.allyUsed || !(SV.gold > 0)) return;
+  const pool = Object.keys(ALLIES).filter(id => allyOk(id) && allyUsable(id));
+  if (!pool.length){ toast('Nessun alleato può aiutarti in questo momento'); return; }
+  const id = pool[Math.floor(Math.random() * pool.length)], A = ALLIES[id], me = S;
+  SV.gold--; save(); S.allyUsed = true; S.busy = true; S.sel = null; renderHands(); markOpen(); allyBtn();
+  const box = $('ally'), line = A.lines[Math.floor(Math.random() * A.lines.length)];
+  box.classList.remove('in', 'out', 'l', 'r'); box.classList.add(Math.random() < .5 ? 'l' : 'r');
+  $('allyPor').innerHTML = rigHTML(id); $('allyName').textContent = CARD_BY[id].n; $('allyName').style.background = EL[CARD_BY[id].el].c; $('allyText').textContent = '';
+  box.hidden = false; void box.offsetWidth; box.classList.add('in'); AUD.sfx('reveal');
+  await wait(450);
+  for (let k = 0; k < line.length; k += 2){ $('allyText').textContent = line.slice(0, k + 2); if (k % 6 === 0) AUD.blip(id, line[k].toLowerCase()); await wait(22); }
+  await wait(700); if (S !== me) return;
+  await allyEffect(id);
+  await wait(900); if (S !== me){ box.hidden = true; return; }
+  box.classList.add('out'); await wait(420); box.hidden = true; box.classList.remove('in', 'out');
+  if (S.board.every(Boolean)) return endGame();
+  S.busy = false; renderHands(); markOpen(); allyBtn(); allyHint();
+}
+async function allyEffect(id){
+  const opp = S.board.map((x, i) => x && x.owner === 'a' ? i : -1).filter(i => i >= 0);
+  if (id === 'light-1'){ S.hint = 2; allyHint(); sayP('<b>Segui i bagliori</b>'); }
+  else if (id === 'shadow-2'){
+    if (opp.length){ const i = opp.sort((x, y) => pw(S.board[y].card) - pw(S.board[x].card))[0]; burstAt(i, 'dust'); const el = $('board').children[i].querySelector('.card'); if (el) el.classList.add('poof'); AUD.sfx('warp'); await wait(380); S.board[i] = null; renderCell(i); }
+    else { const h = S.hands.a.reduce((b, c, k) => pw(c) > pw(S.hands.a[b]) ? k : b, 0); S.hands.a.splice(h, 1); $('handA').dataset.key = ''; AUD.sfx('warp'); }
+    renderHands();
+  }
+  else if (id === 'earth-3'){ CFG.rules.shield = new Set(S.board.filter(x => x && x.owner === 'p').map(x => x.card.uid)); S.board.forEach((x, i) => { if (x && x.owner === 'p') $('board').children[i].querySelector('.card').classList.add('shield'); }); AUD.sfx('place'); }
+  else if (id === 'water-3'){
+    const hp = S.hands.p.reduce((b, c, k) => pw(c) < pw(S.hands.p[b]) ? k : b, 0), ha = S.hands.a.reduce((b, c, k) => pw(c) > pw(S.hands.a[b]) ? k : b, 0);
+    const mine = S.hands.p[hp]; S.hands.p[hp] = S.hands.a[ha]; S.hands.a[ha] = mine;
+    $('handP').dataset.key = ''; $('handA').dataset.key = ''; renderHands(); AUD.sfx('plus');
+  }
+  else if (id === 'fire-4'){ S.hands.p.forEach(c => { c.s = c.s.map(v => Math.min(10, v + 1)); c.buff = true; }); $('handP').dataset.key = ''; renderHands(); AUD.sfx('adv'); }
+  else if (id === 'wind-4'){
+    const i = opp.sort((x, y) => pw(S.board[x].card) - pw(S.board[y].card))[0], el = $('board').children[i].querySelector('.card');
+    el.classList.remove('flip'); void el.offsetWidth; el.classList.add('flip'); AUD.sfx('flip', 3); burstAt(i, 'p');
+    await wait(250); S.board[i].owner = 'p'; el.classList.remove('a'); el.classList.add('p'); renderHands();
+  }
+}
+$('bAlly').onclick = allyGo;
+
 /* ---------- Online multiplayer ----------
    Transport: Firebase Realtime Database (config in firebase-config.js, window.TRIADIA_FIREBASE).
    With ?localnet a same-browser transport (BroadcastChannel + localStorage) is used instead: handy to test with two tabs. */
@@ -2349,6 +2514,64 @@ const NET = (() => {
     }
   };
 })();
+/* ---------- Cloud save: progress mirrored on Firebase under a private 10-character code; newest copy wins ---------- */
+const CL_KEY = 'triadia-cloud', CL_A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+var clCode = '', clTimer = null, clReady = false;
+try { clCode = localStorage.getItem(CL_KEY) || ''; } catch(e){}
+const fmtCode = c => c.slice(0, 5) + '-' + c.slice(5);
+function newCode(){ const r = new Uint8Array(10); crypto.getRandomValues(r); return [...r].map(x => CL_A[x % 32]).join(''); }
+function clStat(t){ $('clStat').textContent = t; }
+function cloudPush(now){
+  if (!clReady || !clCode) return;
+  clearTimeout(clTimer);
+  clTimer = setTimeout(async () => {
+    try { const net = await NET.init(); await net.set('saves/' + clCode, {t:SV._t || Date.now(), data:JSON.stringify(SV)}); clStat('Progressi salvati online · ' + new Date().toLocaleTimeString('it-IT', {hour:'2-digit', minute:'2-digit'})); }
+    catch(e){ clStat('Salvataggio online non riuscito: riproverò alla prossima connessione.'); }
+  }, now ? 0 : 2500);
+}
+function adopt(data){
+  const d = JSON.parse(data);
+  if (!d || !Array.isArray(d.owned)) return false;
+  SV = Object.assign({owned:START.slice(), done:[], intro:false, gems:0, chroma:[], skin:{}, daily:null, tuts:{}}, d);
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify(SV)); } catch(e){}
+  ensureDaily(); goHome(); return true;
+}
+async function cloudStart(){
+  $('clMine').hidden = $('clUse').hidden = !NET.ready();
+  if (!NET.ready()){ clStat(window.TRIADIA_APP ? 'Salvataggio online non attivo: manca la configurazione Firebase.' : 'Il salvataggio online funziona nell\u2019app pubblicata.'); return; }
+  if (!clCode){ clCode = newCode(); try { localStorage.setItem(CL_KEY, clCode); } catch(e){} }
+  $('clCode').textContent = fmtCode(clCode);
+  try {
+    const net = await NET.init(), r = await net.get('saves/' + clCode);
+    clReady = true;
+    if (r && r.data && r.t > LOCAL_T0 && (!S || $('game').hidden)){
+      if (adopt(r.data)){ toast('Progressi aggiornati dal salvataggio online'); clStat('Progressi sincronizzati.'); return; }
+    }
+    cloudPush(true);
+  } catch(e){ clReady = true; clStat('Sei offline: i progressi verranno salvati online appena possibile.'); }
+}
+document.addEventListener('visibilitychange', () => { if (document.hidden && clReady) cloudPush(true); });
+addEventListener('online', () => { if (clReady) cloudPush(true); });
+$('clCopy').onclick = async () => { try { await navigator.clipboard.writeText(fmtCode(clCode)); toast('Codice copiato'); } catch(e){ toast('Il tuo codice: ' + fmtCode(clCode)); } };
+$('clUse').onclick = () => { $('clIn').hidden = false; $('clUse').hidden = true; $('clInput').value = ''; $('clInput').focus(); };
+$('clCancel').onclick = () => { $('clIn').hidden = true; $('clUse').hidden = false; };
+$('clInput').addEventListener('input', e => { const v = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10); e.target.value = v.length > 5 ? v.slice(0, 5) + '-' + v.slice(5) : v; });
+$('clLoad').onclick = async () => {
+  const code = $('clInput').value.replace(/[^A-Z0-9]/g, '');
+  if (code.length !== 10){ toast('Il codice ha 10 caratteri'); return; }
+  if (code === clCode){ toast('Questo è già il codice di questo telefono'); return; }
+  $('clLoad').disabled = true;
+  try {
+    const net = await NET.init(), r = await net.get('saves/' + code);
+    if (!r || !r.data){ toast('Nessun salvataggio con questo codice'); return; }
+    clCode = code; try { localStorage.setItem(CL_KEY, code); } catch(e){}
+    $('clCode').textContent = fmtCode(code);
+    adopt(r.data); $('clIn').hidden = true; $('clUse').hidden = false; $('sndSheet').hidden = true;
+    toast('Progressi recuperati!'); AUD.sfx('reward');
+  } catch(e){ toast('Connessione non riuscita. Riprova'); }
+  finally { $('clLoad').disabled = false; }
+};
+
 let ON = {};
 const CODE_A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const encEl = e => e.map(x => x ? EL6.indexOf(x) : '-').join('');
@@ -2592,6 +2815,7 @@ $('cycRow').innerHTML = cycleRow();
 ['hp1','hp2'].forEach(id => $(id).addEventListener('change', () => { $('hpBase').hidden = !$('hp1').checked; $('hpRules').hidden = $('hp1').checked; }));
 ensureDaily();
 goHome();
+cloudStart();
 
 })();
 </script>
